@@ -10,7 +10,6 @@ class Platform extends MovingSprite {
    */
   private int length;
   
-
   /**
    * Log platform value.
    */
