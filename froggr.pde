@@ -30,7 +30,7 @@ void setup() {
 void draw() {
   background(GAME_BACKGROUND_COLOR);
   player.display();
-  test.setPosition(mouseX, mouseY);
+  test.setPosition(100, 50);
   test.display();
   if (player.hasCollidedWith(test, 0)) {
     println("collision");

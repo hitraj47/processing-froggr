@@ -65,15 +65,17 @@ class Sprite {
   
   public boolean hasCollidedWith(Sprite _sprite, int _buffer) {
     
-    int xMin = getX();
-    int xMax = getX() + getWidth();
-    int yMin = getY();
-
-    if ( (xMax > _sprite.getX() + _buffer && xMin < _sprite.getX() && yMin == _sprite.getY() )
-                    || (xMax > (_sprite.getX() + _sprite.getWidth()) && xMin < (_sprite.getX() + _sprite.getWidth() - _buffer ) && yMin == _sprite.getY()) ){
-            return true;
+    int xmin = this.getX()-_sprite.getWidth()+_buffer;
+    int xmax = this.getX()+this.getWidth()-_buffer;
+    
+    if ( _sprite.getX() >= xmin
+      && _sprite.getX() <= xmax
+      && _sprite.getY() == this.getY() )
+    {
+      return true;
     } else {
-            return false;
+      return false;
     }
+      
   }
 }
