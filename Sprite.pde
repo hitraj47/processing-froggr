@@ -34,7 +34,7 @@ class Sprite {
     this.y = _y;
   }
   
-  public display() {
+  public void display() {
     
     image(image, x, y);
     
