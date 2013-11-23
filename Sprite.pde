@@ -44,6 +44,11 @@ class Sprite {
     this.y = _y;
   }
   
+  public void setPosition(int _x, int _y) {
+    this.x = _x;
+    this.y = _y;
+  }
+  
   public int getWidth() {
     return image.width;
   }
@@ -58,7 +63,17 @@ class Sprite {
     
   }
   
-  public boolean hasCollidedWidth(Sprite _sprite, int _buffer) {
-  
+  public boolean hasCollidedWith(Sprite _sprite, int _buffer) {
+    
+    int xMin = getX();
+    int xMax = getX() + getWidth();
+    int yMin = getY();
+
+    if ( (xMax > _sprite.getX() + _buffer && xMin < _sprite.getX() && yMin == _sprite.getY() )
+                    || (xMax > (_sprite.getX() + _sprite.getWidth()) && xMin < (_sprite.getX() + _sprite.getWidth() - _buffer ) && yMin == _sprite.getY()) ){
+            return true;
+    } else {
+            return false;
+    }
   }
 }

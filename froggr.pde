@@ -15,14 +15,26 @@ public final color GAME_BACKGROUND_COLOR = color(0,0,0);
 
 Sprite player;
 PImage playerImage;
+
+Sprite test;
+PImage testImage;
   
 void setup() {
   size(GAME_WIDTH,GAME_HEIGHT);
   playerImage = loadImage("sprites/player/player-idle.gif");
   player = new Sprite(playerImage, 50, 50);
+  testImage = loadImage("sprites/player/player-death.gif");
+  test = new Sprite(testImage, width/2, height/2);
 }
 
 void draw() {
   background(GAME_BACKGROUND_COLOR);
   player.display();
+  test.setPosition(mouseX, mouseY);
+  test.display();
+  if (player.hasCollidedWith(test, 0)) {
+    println("collision");
+  } else {
+    println("no collision");
+  }
 }
