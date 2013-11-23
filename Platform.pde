@@ -1,32 +1,35 @@
-class Platform extends Sprite {
+class Platform extends MovingSprite {
   
   /**
    * The type of Platform.
    */
-  private int platformType;
+  private String platformType;
+  
+  /**
+   * The length of the platform
+   */
+  private int length;
+  
 
   /**
    * Log platform value.
    */
-  public static final int LOG = 0;
+  public static final String LOG = "log";
   
   /**
    * Lily platform value.
    */
-  public static final int LILY = 1;
+  public static final String LILY = "lily";
   
   /**
    * Turtle platform value.
    */
-  public static final int TURTLE = 2;
+  public static final String TURTLE = "turtle";
   
-  public Platform(int _platformType, int _x, int _y) {
-    this.playformType = _platformType;
-    PImage image;    
-    if (_platformType == LOG) {
-      image = loadImage("sprites/platform/log.gif");
-    } else if (_platformType == LILY) {
-    }
+  public Platform(int _x, int _y, String _direction, String _platformType, int _length) {
+    super(loadImage(_platformType + "-" + _direction + "-" + _length + ".gif"), _x, _y, _direction);
+    this.platformType = _platformType;
+    this.length = _length;    
   }
   
 }

@@ -3,28 +3,28 @@ class MovingSprite extends Sprite {
   /**
    * The direction the Sprite moves in.
    */
-  private int direction;
+  private String direction;
 
   /**
    * Value for moving left.
    */
-  public static final int DIRECTION_LEFT = 0;
+  public static final String DIRECTION_LEFT = "0";
   
   /**
    * Value for moving right.
    */
-  public static final int DIRECTION_RIGHT = 1;
+  public static final String DIRECTION_RIGHT = "1";
   
-  public MovingSprite(PImage _image, int _x, int _y, int _direction) {
-    this.direction = _direction;
+  public MovingSprite(PImage _image, int _x, int _y, String _direction) {
     super(_image, _x, _y);
+    this.direction = _direction;
   }
   
-  public int getDirection() {
+  public String getDirection() {
     return this.direction;
   }
   
-  public void setDirection(int _direction) {
+  public void setDirection(String _direction) {
     this.direction = _direction;
   }
   
