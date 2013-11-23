@@ -24,7 +24,7 @@ void setup() {
   playerImage = loadImage("sprites/player/player-idle.gif");
   player = new Sprite(playerImage, 50, 50);
   testImage = loadImage("sprites/player/player-death.gif");
-  test = new Platform(200, 300, MovingSprite.DIRECTION_LEFT, Platform.LOG, 3);
+  test = new Platform(200, 300, MovingSprite.DIRECTION_LEFT, Platform.LILY, 3);
 }
 
 void draw() {

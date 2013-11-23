@@ -26,7 +26,7 @@ class Platform extends MovingSprite {
   public static final String TURTLE = "turtle";
   
   public Platform(int _x, int _y, String _direction, String _platformType, int _length) {
-    super(loadImage(_platformType + "-" + _direction + "-" + _length + ".gif"), _x, _y, _direction);
+    super(loadImage("sprites/platform/" + _platformType + "-" + _direction + "-" + _length + ".gif"), _x, _y, _direction);
     this.platformType = _platformType;
     this.length = _length;    
   }
