@@ -40,4 +40,7 @@ class Sprite {
     
   }
   
+  public boolean hasCollidedWidth(Sprite _sprite, int _buffer) {
+  
+  }
 }
