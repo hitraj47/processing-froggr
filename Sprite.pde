@@ -3,11 +3,21 @@ class Sprite {
   private PImage image;
   private int x;
   private int y;
+  private boolean removed;
   
   public Sprite(PImage _image, int _x, int _y) {
     this.image = _image;
     this.x = _x;
     this.y = _y;
+    this.removed = false;
+  }
+  
+  public void remove() {
+    this.removed = true;
+  }
+  
+  public boolean isRemoved() {
+    return removed;
   }
   
   public PImage getImage() {
@@ -32,6 +42,14 @@ class Sprite {
   
   public void setY(int _y) {
     this.y = _y;
+  }
+  
+  public int getWidth() {
+    return image.width;
+  }
+  
+  public int getHeight() {
+    return image.height;
   }
   
   public void display() {
