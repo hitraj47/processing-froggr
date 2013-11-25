@@ -18,6 +18,9 @@ PImage playerImage;
 
 Platform test;
 PImage testImage;
+
+Vehicle vehicleTest;
+
   
 void setup() {
   size(GAME_WIDTH,GAME_HEIGHT);
@@ -25,12 +28,14 @@ void setup() {
   player = new Sprite(playerImage, 50, 50);
   testImage = loadImage("sprites/player/player-death.gif");
   test = new Platform(200, 300, MovingSprite.DIRECTION_LEFT, Platform.LILY, 3);
+  vehicleTest = new Vehicle( 200, 450, MovingSprite.DIRECTION_LEFT, Vehicle.RED_CAR, 2);
 }
 
 void draw() {
   background(GAME_BACKGROUND_COLOR);
   player.display();
   test.display();
+  vehicleTest.display();
   if (player.hasCollidedWith(test, 0)) {
     println("collision");
   } else {
