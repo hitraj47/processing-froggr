@@ -36,4 +36,12 @@ class MovingSprite extends Sprite {
     }
   }
   
+  public int getOffScreenXPosition() {
+    if (getDirection() == MovingSprite.DIRECTION_LEFT) {
+      return 0 - getWidth();
+    } else {
+      return froggr.GAME_WIDTH;
+    }
+  }
+  
 }
