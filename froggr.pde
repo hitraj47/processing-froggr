@@ -13,6 +13,9 @@ public static final int GAME_HEIGHT = 700;
  */
 public final color GAME_BACKGROUND_COLOR = color(0,0,0);
 
+// lane height in pixels
+public static final int LANE_HEIGHT = 50;
+
 Sprite player;
 PImage playerImage;
 
@@ -32,6 +35,7 @@ void setup() {
 
 void draw() {
   background(GAME_BACKGROUND_COLOR);
+  drawLanes();
   player.display();
   test.display();
   vehicleTest.display();
@@ -40,4 +44,8 @@ void draw() {
   } else {
     println("no collision");
   }
+}
+
+void drawLanes() {
+  
 }
