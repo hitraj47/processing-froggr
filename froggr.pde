@@ -16,6 +16,9 @@ public final color GAME_BACKGROUND_COLOR = color(0,0,0);
 // lane height in pixels
 public static final int LANE_HEIGHT = 50;
 
+// number of lives the player starts with
+public static final int STARTING_LIVES = 3;
+
 // number of each type of lane
 int numWaterLanes;
 int numSafeLanes;
@@ -52,8 +55,7 @@ void setup() {
   numRoadLanes = 4;
   setupLanes(numWaterLanes, numSafeLanes, numRoadLanes);
   
-  playerImage = loadImage("sprites/player/player-idle.gif");
-  player = new Sprite(playerImage, 50, 50);
+  player = new Player(50, 50, STARTING_LIVES);
   testImage = loadImage("sprites/player/player-death.gif");
   test = new Platform(200, 300, MovingSprite.DIRECTION_LEFT, Platform.LILY, 3);
   vehicleTest = new Vehicle( 200, 450, MovingSprite.DIRECTION_LEFT, Vehicle.RED_CAR, 2);
