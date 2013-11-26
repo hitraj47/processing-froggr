@@ -71,11 +71,6 @@ void draw() {
   player.display();
   test.display();
   vehicleTest.display();
-  if (player.hasCollidedWith(test, 0)) {
-    println("collision");
-  } else {
-    println("no collision");
-  }
 }
 
 void setupLanes(int _numWaterLanes, int _numSafeLanes, int _numRoadLanes) {
