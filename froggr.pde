@@ -23,6 +23,18 @@ Platform test;
 PImage testImage;
 
 Vehicle vehicleTest;
+
+// Win lane
+Lane winLane;
+
+// Arraylist of water lanes, should be 5
+ArrayList<Lane> waterLanes;
+
+// Array list of road lanes, should be 3
+ArrayList<Lane> roadLanes;
+
+// starting lane
+Lane startLane;
   
 void setup() {
   size(GAME_WIDTH,GAME_HEIGHT);
