@@ -16,6 +16,11 @@ public final color GAME_BACKGROUND_COLOR = color(0,0,0);
 // lane height in pixels
 public static final int LANE_HEIGHT = 50;
 
+// number of each type of lane
+int numWaterLanes;
+int numSafeLanes;
+int numRoadLanes;
+
 Sprite player;
 PImage playerImage;
 
@@ -27,10 +32,13 @@ Vehicle vehicleTest;
 // Win lane
 Lane winLane;
 
-// Arraylist of water lanes, should be 5
+// water lanes
 ArrayList<Lane> waterLanes;
 
-// Array list of road lanes, should be 3
+// safe lanes
+ArrayList<Lane> safeLanes;
+
+// road lanes
 ArrayList<Lane> roadLanes;
 
 // starting lane
@@ -38,6 +46,12 @@ Lane startLane;
   
 void setup() {
   size(GAME_WIDTH,GAME_HEIGHT);
+  
+  numWaterLanes = 5;
+  numSafeLanes = 2;
+  numRoadLanes = 4;
+  setupLanes(numWaterLanes, numSafeLanes, numRoadLanes);
+  
   playerImage = loadImage("sprites/player/player-idle.gif");
   player = new Sprite(playerImage, 50, 50);
   testImage = loadImage("sprites/player/player-death.gif");
@@ -58,6 +72,21 @@ void draw() {
   }
 }
 
+void setupLanes(int _numWaterLanes, int _numSafeLanes, int _numRoadLanes) {
+  
+  // start at the top
+  int y = 0;
+  
+  // win lane
+  winLane = new Lane(0, 0, Lane.LANE_WIN);
+  y = y + LANE_HEIGHT;
+  
+  // water lanes
+  
+  
+}
+
 void drawLanes() {
   
+  // draw first lane from the top, the win lane
 }
