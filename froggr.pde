@@ -24,8 +24,8 @@ int numWaterLanes;
 int numSafeLanes;
 int numRoadLanes;
 
-Sprite player;
-PImage playerImage;
+// the player
+Player player;
 
 Platform test;
 PImage testImage;
@@ -46,6 +46,9 @@ ArrayList<Lane> roadLanes = new ArrayList<Lane>();
 
 // starting lane
 Lane startLane;
+
+// the x position of where the player starts
+int playerStartX;
   
 void setup() {
   size(GAME_WIDTH,GAME_HEIGHT);
@@ -55,7 +58,8 @@ void setup() {
   numRoadLanes = 4;
   setupLanes(numWaterLanes, numSafeLanes, numRoadLanes);
   
-  player = new Player(50, 50, STARTING_LIVES);
+  playerStartX = 200;  
+  player = new Player(playerStartX, GAME_HEIGHT - (2 * LANE_HEIGHT), STARTING_LIVES);
   testImage = loadImage("sprites/player/player-death.gif");
   test = new Platform(200, 300, MovingSprite.DIRECTION_LEFT, Platform.LILY, 3);
   vehicleTest = new Vehicle( 200, 450, MovingSprite.DIRECTION_LEFT, Vehicle.RED_CAR, 2);
