@@ -10,7 +10,7 @@ class Lane extends Sprite {
   public static final String LANE_ROAD_BOTTOM = "road-bottom.png";
   
   public Lane(int _x, int _y, String _laneType) {
-    super(loadImage(_laneType), _x, _y);
+    super(loadImage("sprites/lane/" + _laneType), _x, _y);
     this.laneType = _laneType;
   }
   

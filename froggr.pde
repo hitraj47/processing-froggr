@@ -33,13 +33,13 @@ Vehicle vehicleTest;
 Lane winLane;
 
 // water lanes
-ArrayList<Lane> waterLanes;
+ArrayList<Lane> waterLanes = new ArrayList<Lane>();
 
 // safe lanes
-ArrayList<Lane> safeLanes;
+ArrayList<Lane> safeLanes = new ArrayList<Lane>();
 
 // road lanes
-ArrayList<Lane> roadLanes;
+ArrayList<Lane> roadLanes = new ArrayList<Lane>();
 
 // starting lane
 Lane startLane;
@@ -82,11 +82,52 @@ void setupLanes(int _numWaterLanes, int _numSafeLanes, int _numRoadLanes) {
   y = y + LANE_HEIGHT;
   
   // water lanes
+  for (int i = 0; i < _numWaterLanes; i++) {
+    waterLanes.add(new Lane(0, y, Lane.LANE_WATER));
+    y = y + LANE_HEIGHT;
+  }
   
+  // safe lanes
+  for (int i = 0; i < _numSafeLanes; i++) {
+    safeLanes.add(new Lane(0, y, Lane.LANE_GRASS));
+    y = y + LANE_HEIGHT;
+  }
+  
+  // top road
+  roadLanes.add(new Lane(0, y, Lane.LANE_ROAD_TOP));
+  y = y + LANE_HEIGHT;
+  
+  // middle road lanes
+  for (int i = 0; i < _numRoadLanes-2; i++) {
+    roadLanes.add(new Lane(0, y, Lane.LANE_ROAD_MIDDLE));
+    y = y + LANE_HEIGHT;
+  }
+  
+  // bottom road
+  roadLanes.add(new Lane(0, y, Lane.LANE_ROAD_BOTTOM));
+  y = y + LANE_HEIGHT;
+  
+  // start lane
+  startLane = new Lane(0, y, Lane.LANE_GRASS);
   
 }
 
 void drawLanes() {
   
-  // draw first lane from the top, the win lane
+  // draw the lanes starting from the top
+  winLane.display();
+  
+  for (Lane l : waterLanes) {
+    l.display();
+  }
+  
+  for (Lane l : safeLanes) {
+    l.display();
+  }
+  
+  for (Lane l : roadLanes) {
+    l.display();
+  }
+  
+  startLane.display();
 }
