@@ -66,23 +66,23 @@ class Player extends Sprite {
     }
   }
   
-  public void moveForward() {
-    setY(getY() - 50);
+  public void moveForward(int _amount) {
+    setY(getY() - _amount);
     setImage(loadImage(IMAGE_FORWARD));
   }
   
-  public void moveBack() {
-    setY(getY() + 50);
+  public void moveBack(int _amount) {
+    setY(getY() + _amount);
     setImage(loadImage(IMAGE_BACK));
   }
   
-  public void moveLeft() {
-    setX(getX() - 50);
+  public void moveLeft(int _amount) {
+    setX(getX() - _amount);
     setImage(loadImage(IMAGE_LEFT));
   }
   
-  public void moveRight() {
-    setX(getX() + 50);
+  public void moveRight(int _amount) {
+    setX(getX() + _amount);
     setImage(loadImage(IMAGE_RIGHT));
   }
   

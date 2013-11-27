@@ -16,6 +16,9 @@ public final color GAME_BACKGROUND_COLOR = color(0,0,0);
 // lane height in pixels
 public static final int LANE_HEIGHT = 50;
 
+// how many pixels is one space of movement
+public static final int MOVE_AMOUNT = 50;
+
 // number of lives the player starts with
 public static final int STARTING_LIVES = 3;
 
@@ -49,6 +52,11 @@ Lane startLane;
 
 // the x position of where the player starts
 int playerStartX;
+
+// boundaries so the player doesn't go off screen
+int leftBound;
+int rightBound;
+int bottomBound;
   
 void setup() {
   size(GAME_WIDTH,GAME_HEIGHT);
@@ -57,6 +65,11 @@ void setup() {
   numSafeLanes = 2;
   numRoadLanes = 4;
   setupLanes(numWaterLanes, numSafeLanes, numRoadLanes);
+  
+  // set boundaries
+  leftBound = 0;
+  rightBound = width;
+  bottomBound = height - LANE_HEIGHT;
   
   playerStartX = 200;  
   player = new Player(playerStartX, GAME_HEIGHT - (2 * LANE_HEIGHT), STARTING_LIVES);
@@ -75,13 +88,13 @@ void draw() {
 
 void keyPressed() {
   if (keyCode == UP) {
-    player.moveForward();
+    player.moveForward(MOVE_AMOUNT);
   } else if (keyCode == DOWN) {
-    player.moveBack();
+    player.moveBack(MOVE_AMOUNT);
   } else if (keyCode == LEFT) {
-    player.moveLeft();
+    player.moveLeft(MOVE_AMOUNT);
   } else if (keyCode == RIGHT) {
-    player.moveRight();
+    player.moveRight(MOVE_AMOUNT);
   }
 }
 
