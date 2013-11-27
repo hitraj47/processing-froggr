@@ -88,13 +88,21 @@ void draw() {
 
 void keyPressed() {
   if (keyCode == UP) {
-    player.moveForward(MOVE_AMOUNT);
+    if (player.getY() - MOVE_AMOUNT >= 0) {
+      player.moveForward(MOVE_AMOUNT);
+    }
   } else if (keyCode == DOWN) {
-    player.moveBack(MOVE_AMOUNT);
+    if(player.getY() + MOVE_AMOUNT < bottomBound) {
+      player.moveBack(MOVE_AMOUNT);
+    }
   } else if (keyCode == LEFT) {
-    player.moveLeft(MOVE_AMOUNT);
+    if (player.getX() - MOVE_AMOUNT >= leftBound) {
+      player.moveLeft(MOVE_AMOUNT);
+    }
   } else if (keyCode == RIGHT) {
-    player.moveRight(MOVE_AMOUNT);
+    if (player.getX() + MOVE_AMOUNT < rightBound) {
+      player.moveRight(MOVE_AMOUNT);
+    }
   }
 }
 
