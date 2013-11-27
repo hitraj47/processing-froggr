@@ -71,7 +71,7 @@ class Player extends Sprite {
     setImage(loadImage(IMAGE_FORWARD));
   }
   
-  public void moveBackward() {
+  public void moveBack() {
     setY(getY() + 50);
     setImage(loadImage(IMAGE_BACK));
   }

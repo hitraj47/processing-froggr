@@ -73,6 +73,18 @@ void draw() {
   vehicleTest.display();
 }
 
+void keyPressed() {
+  if (keyCode == UP) {
+    player.moveForward();
+  } else if (keyCode == DOWN) {
+    player.moveBack();
+  } else if (keyCode == LEFT) {
+    player.moveLeft();
+  } else if (keyCode == RIGHT) {
+    player.moveRight();
+  }
+}
+
 void setupLanes(int _numWaterLanes, int _numSafeLanes, int _numRoadLanes) {
   
   // start at the top
