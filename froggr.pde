@@ -30,11 +30,6 @@ int numRoadLanes;
 // the player
 Player player;
 
-Platform test;
-PImage testImage;
-
-Vehicle vehicleTest;
-
 // Win lane
 Lane winLane;
 
@@ -73,17 +68,12 @@ void setup() {
   
   playerStartX = 200;  
   player = new Player(playerStartX, GAME_HEIGHT - (2 * LANE_HEIGHT), STARTING_LIVES);
-  testImage = loadImage("sprites/player/player-death.gif");
-  test = new Platform(200, 300, MovingSprite.DIRECTION_LEFT, Platform.LILY, 3);
-  vehicleTest = new Vehicle( 200, 450, MovingSprite.DIRECTION_LEFT, Vehicle.RED_CAR, 2);
 }
 
 void draw() {
   background(GAME_BACKGROUND_COLOR);
   drawLanes();
   player.display();
-  test.display();
-  vehicleTest.display();
 }
 
 void keyPressed() {
