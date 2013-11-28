@@ -159,13 +159,35 @@ void moveSprites() {
   while (pi.hasNext()) {
     Platform p = pi.next();
     p.move();
+    if (isOffScreen(p.getX(), p.getWidth())) {
+      p.removeSprite();
+      pi.remove();
+    }
     p.display();
   }
   
-  for (Vehicle v : vehicles) {
+  Iterator<Vehicle> vi = vehicles.iterator();
+  while (vi.hasNext()) {
+    Vehicle v = vi.next();
     v.move();
+    if (isOffScreen(v.getX(), v.getWidth())) {
+      v.removeSprite();
+      vi.remove();
+    }
     v.display();
   }
+}
+
+boolean isOffScreen(int x, int w) {
+  
+ if (x > width
+    || (x+w) < 0) 
+ {
+   return true;
+ } else {
+   return false;
+ }
+  
 }
 
 void generateMovingSprites() {
