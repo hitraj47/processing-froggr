@@ -1,4 +1,5 @@
 import ddf.minim.*;
+import java.util.Iterator;
 
 /**
  * Width of the game in pixels.
@@ -154,7 +155,9 @@ void keyPressed() {
 }
 
 void moveSprites() {
-  for (Platform p : platforms) {
+  Iterator<Platform> pi = platforms.iterator();
+  while (pi.hasNext()) {
+    Platform p = pi.next();
     p.move();
     p.display();
   }

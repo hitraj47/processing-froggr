@@ -45,7 +45,7 @@ class Player extends Sprite {
   
   public void kill() {
     if (isAlive()) {
-      remove();
+      removeSprite();
       if (getLives() == 1) {
         setImage(loadImage(IMAGE_DEATH));
       }

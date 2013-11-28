@@ -12,7 +12,7 @@ class Sprite {
     this.removed = false;
   }
   
-  public void remove() {
+  public void removeSprite() {
     this.removed = true;
   }
   
