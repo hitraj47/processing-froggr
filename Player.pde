@@ -67,27 +67,35 @@ class Player extends Sprite {
   }
   
   public void moveForward(int _amount) {
-    setY(getY() - _amount);
-    setImage(loadImage(IMAGE_FORWARD));
-    playSoundEffect(HOP);
+    if (alive) {
+      setY(getY() - _amount);
+      setImage(loadImage(IMAGE_FORWARD));
+      playSoundEffect(HOP);
+    }
   }
   
   public void moveBack(int _amount) {
-    setY(getY() + _amount);
-    setImage(loadImage(IMAGE_BACK));
-    playSoundEffect(HOP);
+    if (alive) {
+      setY(getY() + _amount);
+      setImage(loadImage(IMAGE_BACK));
+      playSoundEffect(HOP);
+    }
   }
   
   public void moveLeft(int _amount) {
-    setX(getX() - _amount);
-    setImage(loadImage(IMAGE_LEFT));
-    playSoundEffect(HOP);
+    if (alive) {
+      setX(getX() - _amount);
+      setImage(loadImage(IMAGE_LEFT));
+      playSoundEffect(HOP);
+    }
   }
   
   public void moveRight(int _amount) {
-    setX(getX() + _amount);
-    setImage(loadImage(IMAGE_RIGHT));
-    playSoundEffect(HOP);
+    if (alive) {
+      setX(getX() + _amount);
+      setImage(loadImage(IMAGE_RIGHT));
+      playSoundEffect(HOP);
+    }
   }
   
 }
