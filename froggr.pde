@@ -1,3 +1,5 @@
+import ddf.minim.*;
+
 /**
  * Width of the game in pixels.
  */
@@ -18,6 +20,14 @@ public static final int LANE_HEIGHT = 50;
 
 // number of lives the player starts with
 public static final int STARTING_LIVES = 3;
+
+public static final String HOP = "sounds/player-movement.wav";
+
+public static final String COLLISION = "sounds/sprite-collision.wav";
+
+public static final String SPLASH = "sounds/splash.wav";
+
+public static final String VICTORY = "sounds/victory.wav";
 
 // number of each type of lane
 int numWaterLanes;
@@ -131,4 +141,14 @@ void drawLanes() {
   }
   
   startLane.display();
+}
+
+void playSoundEffect(String soundEffect) {
+  Minim minim = new Minim(this);
+  AudioPlayer audioPlayer = minim.loadFile(soundEffect);
+  audioPlayer.play();
+}
+
+void mousePressed(){
+ playSoundEffect(HOP); 
 }
