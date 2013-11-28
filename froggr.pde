@@ -97,12 +97,12 @@ long time;
 
 // regen times for lanes
 long regen = 4000;
-  
+
 void setup() {
   // set time to negative regen so it draws stuff when game loads
   time = -regen;
-  size(GAME_WIDTH,GAME_HEIGHT);
-  
+  size(GAME_WIDTH, GAME_HEIGHT);
+
   gameWon = false;
   gameOver = false;
   numWaterLanes = 5;
@@ -123,10 +123,11 @@ void setup() {
 void draw() {
   background(GAME_BACKGROUND_COLOR);
   drawLanes();
-  generateMovingSprites();
-  moveSprites();
   drawFlys();
+  generateMovingSprites();
+  drawMovingPlatforms();
   processPlayer();
+  drawMovingVehicles();
   drawPlayerLives();
   processGameplay();
 }
@@ -154,9 +155,9 @@ void keyPressed() {
   }
 }
 
-void moveSprites() {
+void drawMovingPlatforms() {
   Iterator<Platform> pi = platforms.iterator();
-  while (pi.hasNext()) {
+  while (pi.hasNext ()) {
     Platform p = pi.next();
     p.move();
     if (isOffScreen(p.getX(), p.getWidth())) {
@@ -165,9 +166,11 @@ void moveSprites() {
     }
     p.display();
   }
-  
+}
+
+void drawMovingVehicles() {
   Iterator<Vehicle> vi = vehicles.iterator();
-  while (vi.hasNext()) {
+  while (vi.hasNext ()) {
     Vehicle v = vi.next();
     v.move();
     if (isOffScreen(v.getX(), v.getWidth())) {
@@ -179,66 +182,73 @@ void moveSprites() {
 }
 
 boolean isOffScreen(int x, int w) {
-  
- if (x > width
-    || (x+w) < 0) 
- {
-   return true;
- } else {
-   return false;
- }
-  
+
+  if (x > width || (x+w) < 0) 
+  {
+    return true;
+  } 
+  else {
+    return false;
+  }
 }
 
 void generateMovingSprites() {
-  
+
   boolean updateTime = false;
-  
+
   if (millis() - time > regen) {
     platforms.add(new Platform(width-10, waterLanes.get(0).getY(), MovingSprite.DIRECTION_LEFT, Platform.LOG, 3));
     updateTime = true;
   }
-  
+
   if (millis() - time > regen) {
-    platforms.add(new Platform(0, waterLanes.get(1).getY(), MovingSprite.DIRECTION_RIGHT, Platform.TURTLE, 2));
+    Platform platform = new Platform(0, waterLanes.get(1).getY(), MovingSprite.DIRECTION_RIGHT, Platform.TURTLE, 2);
+    platform.setX(0 - platform.getWidth());
+    platforms.add(platform);
     updateTime = true;
   }
-  
+
   if (millis() - time > regen) {
     platforms.add(new Platform(width-10, waterLanes.get(2).getY(), MovingSprite.DIRECTION_LEFT, Platform.LOG, 3));
     updateTime = true;
   }
-  
+
   if (millis() - time > regen) {
-    platforms.add(new Platform(0, waterLanes.get(3).getY(), MovingSprite.DIRECTION_RIGHT, Platform.TURTLE, 3));
+    Platform platform = new Platform(0, waterLanes.get(3).getY(), MovingSprite.DIRECTION_RIGHT, Platform.TURTLE, 3);
+    platform.setX(0 - platform.getWidth());
+    platforms.add(platform);
     updateTime = true;
   }
-  
+
   if (millis() - time > regen) {
     platforms.add(new Platform(width-10, waterLanes.get(4).getY(), MovingSprite.DIRECTION_LEFT, Platform.LILY, 3));
     updateTime = true;
   }
-  
+
   if (millis() - time > regen) {
     vehicles.add(new Vehicle(width-10, roadLanes.get(0).getY(), MovingSprite.DIRECTION_LEFT, Vehicle.TRUCK, 2));
     updateTime = true;
   }
-  
+
   if (millis() - time > regen) {
-    vehicles.add(generateRandomCar(0, roadLanes.get(1).getY(), MovingSprite.DIRECTION_RIGHT, 3));
+    Vehicle vehicle = generateRandomCar(0, roadLanes.get(1).getY(), MovingSprite.DIRECTION_RIGHT, 3);
+    vehicle.setX(0 - vehicle.getWidth());
+    vehicles.add(vehicle);
     updateTime = true;
   }
-  
+
   if (millis() - time > regen) {
     vehicles.add(generateRandomCar(width-10, roadLanes.get(2).getY(), MovingSprite.DIRECTION_LEFT, 2));
     updateTime = true;
   }
-  
+
   if (millis() - time > regen) {
-    vehicles.add(generateRandomCar(0, roadLanes.get(3).getY(), MovingSprite.DIRECTION_RIGHT, 1));
+    Vehicle vehicle = generateRandomCar(0, roadLanes.get(3).getY(), MovingSprite.DIRECTION_RIGHT, 1);
+    vehicle.setX(0 - vehicle.getWidth());
+    vehicles.add(vehicle);
     updateTime = true;
   }
-  
+
   if (updateTime) {
     time = millis();
   }
@@ -249,12 +259,13 @@ Vehicle generateRandomCar(int _x, int _y, String _direction, int _length) {
   String car;
   if (r%2==0) {
     car = Vehicle.RED_CAR;
-  } else {
+  } 
+  else {
     car = Vehicle.BLUE_CAR;
   }
   return new Vehicle(_x, _y, _direction, car, _length);
 }
-  
+
 
 void setupLanes(int _numWaterLanes, int _numSafeLanes, int _numRoadLanes) {
 
@@ -381,7 +392,77 @@ private void processPlayer() {
     score = score + NEW_LANE_POINTS;
     nextPointsPosition = nextPointsPosition - LANE_HEIGHT;
   }
-  
-  //I Will complete this once Raj gets the platforms moving
+
+
+  /*
+     * Check if player has collided with a vehicle
+   */
+  for (int i = 0; i < vehicles.size(); i++) {
+    if (vehicles.get(i).hasCollidedWith(player, 10)) {
+      if (player.isAlive()) {
+        playSoundEffect(COLLISION);
+        player.kill();
+        image(player.getImage(), player.getX(), player.getY());
+      }
+    }
+  }
+
+
+  /*
+     * Only runs if the player has entered into the water lanes. This is set
+   * up so if the player is not on a platform he is going to die.
+   */
+  if (player.getY() < waterLanes.get(4).getY()+50) {
+    int currentPlatform = -1;
+    for (int i = 0; i < platforms.size(); i++) {
+      // Checks if player lands on platform, if so he will sail on it.
+      if (platforms.get(i).hasCollidedWith(player, 0)) {
+        player.sail(platforms.get(i));
+        currentPlatform = i;
+      }
+    }
+
+    if (currentPlatform != -1) {
+      // While sailing on the platform this checks if the player jumps
+      // off a platform into water
+      if (!player.isOnPlatform(platforms.get(currentPlatform)) && player.isAlive()) {
+        playSoundEffect(SPLASH);
+        player.kill();
+      }
+    } 
+    else {
+      int check = 0;
+      for (int i = 0; i < flys.size(); i++) {
+        check++;
+        // Checks if the player has reached an accessible win zone.
+        // If not, he dies.
+        if (flys.get(i).hasCollidedWith(player, 15) && flys.get(i).isConsumed() == false) {
+          flys.get(i).setConsumed(true);
+          // add bonus points to player score for consuming a fly.
+          score = score + CONSUME_FLY_BONUS;
+          // reset the position at which the frog can gain more
+          // points
+          nextPointsPosition = 600;
+          flysConsumed++;
+          playSoundEffect(VICTORY);
+          spawnPlayer(player.getLives());
+          check = 0;
+        } 
+        else {
+          if (check == 4) {
+            if (player.isAlive()) {
+              if (player.getY() == 0) {
+                playSoundEffect(COLLISION);
+              } 
+              else {
+                playSoundEffect(SPLASH);
+              }
+            }
+            player.kill();
+          }
+        }
+      }
+    }
+  }
 }
 
