@@ -95,18 +95,11 @@ int bottomBound;
 long time;
 
 // regen times for lanes
-long waterLane1Regen = 50;
-long waterLane2Regen = 50;
-long waterLane3Regen = 50;
-long waterLane4Regen = 50;
-long waterLane5Regen = 50;
-long roadLane1Regen = 50;
-long roadLane2Regen = 50;
-long roadLane3Regen = 50;
-long roadLane4Regen = 50;
+long regen = 5000;
   
 void setup() {
-  time = millis();
+  // set time to negative regen so it draws stuff when game loads
+  time = -regen;
   size(GAME_WIDTH,GAME_HEIGHT);
   
   gameWon = false;
@@ -130,12 +123,7 @@ void draw() {
   background(GAME_BACKGROUND_COLOR);
   drawLanes();
   generateMovingSprites();
-  for (Platform p : platforms) {
-    p.display();
-  }
-  for (Vehicle v : vehicles) {
-    v.display();
-  }
+  moveSprites();
   drawFlys();
   processPlayer();
   drawPlayerLives();
@@ -165,51 +153,63 @@ void keyPressed() {
   }
 }
 
+void moveSprites() {
+  for (Platform p : platforms) {
+    p.move();
+    p.display();
+  }
+  
+  for (Vehicle v : vehicles) {
+    v.move();
+    v.display();
+  }
+}
+
 void generateMovingSprites() {
   
   boolean updateTime = false;
   
-  if (millis() - time > waterLane1Regen) {
+  if (millis() - time > regen) {
     platforms.add(new Platform(width-10, waterLanes.get(0).getY(), MovingSprite.DIRECTION_LEFT, Platform.LOG, 3));
     updateTime = true;
   }
   
-  if (millis() - time > waterLane2Regen) {
+  if (millis() - time > regen) {
     platforms.add(new Platform(0, waterLanes.get(1).getY(), MovingSprite.DIRECTION_RIGHT, Platform.TURTLE, 2));
     updateTime = true;
   }
   
-  if (millis() - time > waterLane3Regen) {
+  if (millis() - time > regen) {
     platforms.add(new Platform(width-10, waterLanes.get(2).getY(), MovingSprite.DIRECTION_LEFT, Platform.LOG, 3));
     updateTime = true;
   }
   
-  if (millis() - time > waterLane4Regen) {
+  if (millis() - time > regen) {
     platforms.add(new Platform(0, waterLanes.get(3).getY(), MovingSprite.DIRECTION_RIGHT, Platform.TURTLE, 3));
     updateTime = true;
   }
   
-  if (millis() - time > waterLane5Regen) {
+  if (millis() - time > regen) {
     platforms.add(new Platform(width-10, waterLanes.get(4).getY(), MovingSprite.DIRECTION_LEFT, Platform.LILY, 3));
     updateTime = true;
   }
   
-  if (millis() - time > roadLane1Regen) {
+  if (millis() - time > regen) {
     vehicles.add(new Vehicle(width-10, roadLanes.get(0).getY(), MovingSprite.DIRECTION_LEFT, Vehicle.TRUCK, 2));
     updateTime = true;
   }
   
-  if (millis() - time > roadLane2Regen) {
+  if (millis() - time > regen) {
     vehicles.add(generateRandomCar(0, roadLanes.get(1).getY(), MovingSprite.DIRECTION_RIGHT, 3));
     updateTime = true;
   }
   
-  if (millis() - time > roadLane3Regen) {
+  if (millis() - time > regen) {
     vehicles.add(generateRandomCar(width-10, roadLanes.get(2).getY(), MovingSprite.DIRECTION_LEFT, 2));
     updateTime = true;
   }
   
-  if (millis() - time > roadLane4Regen) {
+  if (millis() - time > regen) {
     vehicles.add(generateRandomCar(0, roadLanes.get(3).getY(), MovingSprite.DIRECTION_RIGHT, 1));
     updateTime = true;
   }

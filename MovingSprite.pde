@@ -44,4 +44,12 @@ class MovingSprite extends Sprite {
     }
   }
   
+  public void move() {
+    if (direction.equals(DIRECTION_LEFT)) {
+      setX(getX() - 1);
+    } else {
+      setX(getX() + 1);
+    }      
+  }
+  
 }
