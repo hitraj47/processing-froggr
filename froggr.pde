@@ -42,6 +42,12 @@ ArrayList<Lane> safeLanes = new ArrayList<Lane>();
 // road lanes
 ArrayList<Lane> roadLanes = new ArrayList<Lane>();
 
+// platforms
+ArrayList<Platform> platforms = new ArrayList<Platform>();
+
+// vehicles
+ArrayList<Vehicle> vehicles = new ArrayList<Vehicle>();
+
 // starting lane
 Lane startLane;
 
@@ -52,14 +58,19 @@ int playerStartX;
 int leftBound;
 int rightBound;
 int bottomBound;
+
+// keep track of time...
+long time;
   
 void setup() {
+  time = millis();
   size(GAME_WIDTH,GAME_HEIGHT);
   
   numWaterLanes = 5;
   numSafeLanes = 2;
   numRoadLanes = 4;
   setupLanes(numWaterLanes, numSafeLanes, numRoadLanes);
+  addMovingSprites();
   
   // set boundaries
   leftBound = 0;
@@ -73,6 +84,9 @@ void setup() {
 void draw() {
   background(GAME_BACKGROUND_COLOR);
   drawLanes();
+  for (Platform p : platforms) {
+    p.display();
+  }
   player.display();
 }
 
@@ -93,6 +107,12 @@ void keyPressed() {
     if (player.getX() + MOVE_AMOUNT < rightBound) {
       player.moveRight(MOVE_AMOUNT);
     }
+  }
+}
+
+void addMovingSprites() {
+  for (Lane l : waterLanes) {
+    platforms.add(new Platform(0, l.getY(), MovingSprite.DIRECTION_RIGHT, Platform.LOG, 3));
   }
 }
 
