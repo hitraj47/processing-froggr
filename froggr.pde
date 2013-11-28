@@ -122,6 +122,9 @@ void draw() {
   for (Platform p : platforms) {
     p.display();
   }
+  for (Vehicle v : vehicles) {
+    v.display();
+  }
   drawFlys();
   processPlayer();
   drawPlayerLives();
@@ -152,9 +155,25 @@ void keyPressed() {
 }
 
 void addMovingSprites() {
-  for (Lane l : waterLanes) {
-    platforms.add(new Platform(0, l.getY(), MovingSprite.DIRECTION_RIGHT, Platform.LOG, 3));
+  
+  // add the stuff to the water lanes
+  platforms.add(new Platform(width-10, waterLanes.get(0).getY(), MovingSprite.DIRECTION_LEFT, Platform.LOG, 3));
+  platforms.add(new Platform(0, waterLanes.get(1).getY(), MovingSprite.DIRECTION_RIGHT, Platform.TURTLE, 2));
+  platforms.add(new Platform(width-10, waterLanes.get(2).getY(), MovingSprite.DIRECTION_LEFT, Platform.LOG, 3));
+  platforms.add(new Platform(0, waterLanes.get(3).getY(), MovingSprite.DIRECTION_RIGHT, Platform.TURTLE, 3));
+  platforms.add(new Platform(width-10, waterLanes.get(4).getY(), MovingSprite.DIRECTION_LEFT, Platform.LILY, 3));
+  
+  // vehicles
+  float r = random(3);
+  String car;
+  if (r%2==0) {
+    car = Vehicle.RED_CAR;
+  } else {
+    car = Vehicle.BLUE_CAR;
   }
+  
+  vehicles.add(new Vehicle(width-20, roadLanes.get(0).getY(), MovingSprite.DIRECTION_LEFT, Vehicle.TRUCK, 2));
+  vehicles.add(new Vehicle(0, roadLanes.get(1).getY(), MovingSprite.DIRECTION_RIGHT, car, 3));
 }
 
 void setupLanes(int _numWaterLanes, int _numSafeLanes, int _numRoadLanes) {
