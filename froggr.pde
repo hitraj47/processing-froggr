@@ -22,11 +22,8 @@ public static final int LANE_HEIGHT = 50;
 public static final int STARTING_LIVES = 3;
 
 public static final String HOP = "sounds/player-movement.wav";
-
 public static final String COLLISION = "sounds/sprite-collision.wav";
-
 public static final String SPLASH = "sounds/splash.wav";
-
 public static final String VICTORY = "sounds/victory.wav";
 
 // number of each type of lane
@@ -142,7 +139,7 @@ void drawLanes() {
   startLane.display();
 }
 
-public void playSoundEffect(String soundEffect) {
+public void playSoundEffect(final String soundEffect) {
   Minim minim = new Minim(this);
   AudioSnippet audioSnippet = minim.loadSnippet(soundEffect);
   if (audioSnippet.isPlaying()) {
@@ -153,7 +150,4 @@ public void playSoundEffect(String soundEffect) {
   }
 }
 
-void mousePressed() {
-  playSoundEffect(HOP);
-}
 
