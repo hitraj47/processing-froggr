@@ -24,10 +24,33 @@ public static final int MOVE_AMOUNT = 50;
 // number of lives the player starts with
 public static final int STARTING_LIVES = 3;
 
+/**
+ * The nextPointsPosition keeps track of the next YPos the user must reach
+ * to gain NEW_LANE_POINTS.
+ */
+private int nextPointsPosition = 600;
+
+/**
+ * Points that are earned when a fly is consumed.
+ */
+private final int CONSUME_FLY_BONUS = 100;
+
+/**
+ * Points that are earned when entering a lane for the first time.
+ */
+private final int NEW_LANE_POINTS = 25;
+
 public static final String HOP = "sounds/player-movement.wav";
 public static final String COLLISION = "sounds/sprite-collision.wav";
 public static final String SPLASH = "sounds/splash.wav";
 public static final String VICTORY = "sounds/victory.wav";
+
+int flysConsumed = 0;
+
+int score = 0;
+
+boolean gameWon;
+boolean gameOver;
 
 // number of each type of lane
 int numWaterLanes;
@@ -36,11 +59,6 @@ int numRoadLanes;
 
 // the player
 Player player;
-
-Platform test;
-PImage testImage;
-
-Vehicle vehicleTest;
 
 // Win lane
 Lane winLane;
@@ -70,7 +88,8 @@ int bottomBound;
 
 void setup() {
   size(GAME_WIDTH, GAME_HEIGHT);
-
+  gameWon = false;
+  gameOver = false;
   numWaterLanes = 5;
   numSafeLanes = 2;
   numRoadLanes = 4;
@@ -82,21 +101,17 @@ void setup() {
   rightBound = width;
   bottomBound = height - LANE_HEIGHT;
 
-  playerStartX = 200;  
+  playerStartX = 250;  
   player = new Player(playerStartX, GAME_HEIGHT - (2 * LANE_HEIGHT), STARTING_LIVES);
-  testImage = loadImage("sprites/player/player-death.gif");
-  test = new Platform(200, 300, MovingSprite.DIRECTION_LEFT, Platform.LILY, 3);
-  vehicleTest = new Vehicle( 200, 450, MovingSprite.DIRECTION_LEFT, Vehicle.RED_CAR, 2);
 }
 
 void draw() {
   background(GAME_BACKGROUND_COLOR);
   drawLanes();
   drawFlys();
-  player.display();
-  test.display();
-  vehicleTest.display();
+  processPlayer();
   drawPlayerLives();
+  processGameplay();
 }
 
 void keyPressed() {
@@ -208,5 +223,46 @@ public void playSoundEffect(final String soundEffect) {
   else {
     audioSnippet.play();
   }
+}
+
+private void spawnPlayer(int _lives) {
+  this.player = new Player(playerStartX, GAME_HEIGHT - (2 * LANE_HEIGHT), _lives);
+}
+
+private void processGameplay() {
+  if (!player.isAlive() && player.getLives() > 0) {
+    spawnPlayer(player.getLives());
+  }
+
+  // Checks if the game is over
+  if (player.getLives() == 0) {
+    text("GAME OVER", 225, GAME_HEIGHT - 25);
+    gameOver = true;
+  }
+
+  // Checks if the player wins the game.
+  if (flysConsumed == 4) {
+    text("YOU WIN!", 225, GAME_HEIGHT - 25);
+    gameWon = true;
+  }
+
+  // Keeps track of the score
+  text("SCORE: " + score, 400, GAME_HEIGHT - 25);
+}
+
+private void processPlayer() {
+  player.display();
+
+  /*
+   * Keeps track of the next position the player must reach to gain
+   * points. If player dies he must reach the last nextPointsPosition to
+   * gain NEW_LANE_POINTS
+   */
+  if (player.getY() < nextPointsPosition) {
+    score = score + NEW_LANE_POINTS;
+    nextPointsPosition = nextPointsPosition - LANE_HEIGHT;
+  }
+  
+  //I Will complete this once Raj gets the platforms moving
 }
 
