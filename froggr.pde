@@ -93,6 +93,17 @@ int bottomBound;
 
 // keep track of time...
 long time;
+
+// regen times for lanes
+long waterLane1Regen = 50;
+long waterLane2Regen = 50;
+long waterLane3Regen = 50;
+long waterLane4Regen = 50;
+long waterLane5Regen = 50;
+long roadLane1Regen = 50;
+long roadLane2Regen = 50;
+long roadLane3Regen = 50;
+long roadLane4Regen = 50;
   
 void setup() {
   time = millis();
@@ -104,7 +115,6 @@ void setup() {
   numSafeLanes = 2;
   numRoadLanes = 4;
   setupLanes(numWaterLanes, numSafeLanes, numRoadLanes);
-  addMovingSprites();  
   createFlys();
 
   // set boundaries
@@ -119,6 +129,7 @@ void setup() {
 void draw() {
   background(GAME_BACKGROUND_COLOR);
   drawLanes();
+  generateMovingSprites();
   for (Platform p : platforms) {
     p.display();
   }
@@ -154,16 +165,61 @@ void keyPressed() {
   }
 }
 
-void addMovingSprites() {
+void generateMovingSprites() {
   
-  // add the stuff to the water lanes
-  platforms.add(new Platform(width-10, waterLanes.get(0).getY(), MovingSprite.DIRECTION_LEFT, Platform.LOG, 3));
-  platforms.add(new Platform(0, waterLanes.get(1).getY(), MovingSprite.DIRECTION_RIGHT, Platform.TURTLE, 2));
-  platforms.add(new Platform(width-10, waterLanes.get(2).getY(), MovingSprite.DIRECTION_LEFT, Platform.LOG, 3));
-  platforms.add(new Platform(0, waterLanes.get(3).getY(), MovingSprite.DIRECTION_RIGHT, Platform.TURTLE, 3));
-  platforms.add(new Platform(width-10, waterLanes.get(4).getY(), MovingSprite.DIRECTION_LEFT, Platform.LILY, 3));
+  boolean updateTime = false;
   
-  // vehicles
+  if (millis() - time > waterLane1Regen) {
+    platforms.add(new Platform(width-10, waterLanes.get(0).getY(), MovingSprite.DIRECTION_LEFT, Platform.LOG, 3));
+    updateTime = true;
+  }
+  
+  if (millis() - time > waterLane2Regen) {
+    platforms.add(new Platform(0, waterLanes.get(1).getY(), MovingSprite.DIRECTION_RIGHT, Platform.TURTLE, 2));
+    updateTime = true;
+  }
+  
+  if (millis() - time > waterLane3Regen) {
+    platforms.add(new Platform(width-10, waterLanes.get(2).getY(), MovingSprite.DIRECTION_LEFT, Platform.LOG, 3));
+    updateTime = true;
+  }
+  
+  if (millis() - time > waterLane4Regen) {
+    platforms.add(new Platform(0, waterLanes.get(3).getY(), MovingSprite.DIRECTION_RIGHT, Platform.TURTLE, 3));
+    updateTime = true;
+  }
+  
+  if (millis() - time > waterLane5Regen) {
+    platforms.add(new Platform(width-10, waterLanes.get(4).getY(), MovingSprite.DIRECTION_LEFT, Platform.LILY, 3));
+    updateTime = true;
+  }
+  
+  if (millis() - time > roadLane1Regen) {
+    vehicles.add(new Vehicle(width-10, roadLanes.get(0).getY(), MovingSprite.DIRECTION_LEFT, Vehicle.TRUCK, 2));
+    updateTime = true;
+  }
+  
+  if (millis() - time > roadLane2Regen) {
+    vehicles.add(generateRandomCar(0, roadLanes.get(1).getY(), MovingSprite.DIRECTION_RIGHT, 3));
+    updateTime = true;
+  }
+  
+  if (millis() - time > roadLane3Regen) {
+    vehicles.add(generateRandomCar(width-10, roadLanes.get(2).getY(), MovingSprite.DIRECTION_LEFT, 2));
+    updateTime = true;
+  }
+  
+  if (millis() - time > roadLane4Regen) {
+    vehicles.add(generateRandomCar(0, roadLanes.get(3).getY(), MovingSprite.DIRECTION_RIGHT, 1));
+    updateTime = true;
+  }
+  
+  if (updateTime) {
+    time = millis();
+  }
+}
+
+Vehicle generateRandomCar(int _x, int _y, String _direction, int _length) {
   int r = (int) random(10);
   String car;
   if (r%2==0) {
@@ -171,26 +227,9 @@ void addMovingSprites() {
   } else {
     car = Vehicle.BLUE_CAR;
   }
-  
-  vehicles.add(new Vehicle(width-10, roadLanes.get(0).getY(), MovingSprite.DIRECTION_LEFT, Vehicle.TRUCK, 2));
-  vehicles.add(new Vehicle(0, roadLanes.get(1).getY(), MovingSprite.DIRECTION_RIGHT, car, 3));
-  
-  r = (int) random(10);
-  if (r%2==0) {
-    car = Vehicle.RED_CAR;
-  } else {
-    car = Vehicle.BLUE_CAR;
-  }
-  vehicles.add(new Vehicle(width-10, roadLanes.get(2).getY(), MovingSprite.DIRECTION_LEFT, car, 2));
-  
-  r = (int) random(10);
-  if (r%2==0) {
-    car = Vehicle.RED_CAR;
-  } else {
-    car = Vehicle.BLUE_CAR;
-  }
-  vehicles.add(new Vehicle(0, roadLanes.get(3).getY(), MovingSprite.DIRECTION_RIGHT, car, 1));
+  return new Vehicle(_x, _y, _direction, car, _length);
 }
+  
 
 void setupLanes(int _numWaterLanes, int _numSafeLanes, int _numRoadLanes) {
 
