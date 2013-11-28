@@ -57,6 +57,8 @@ ArrayList<Lane> roadLanes = new ArrayList<Lane>();
 // starting lane
 Lane startLane;
 
+private ArrayList<Fly> flys = new ArrayList<Fly>();
+
 // the x position of where the player starts
 int playerStartX;
 
@@ -64,8 +66,8 @@ int playerStartX;
 int leftBound;
 int rightBound;
 int bottomBound;
-  
-  
+
+
 void setup() {
   size(GAME_WIDTH, GAME_HEIGHT);
 
@@ -73,7 +75,8 @@ void setup() {
   numSafeLanes = 2;
   numRoadLanes = 4;
   setupLanes(numWaterLanes, numSafeLanes, numRoadLanes);
-  
+  createFlys();
+
   // set boundaries
   leftBound = 0;
   rightBound = width;
@@ -89,9 +92,11 @@ void setup() {
 void draw() {
   background(GAME_BACKGROUND_COLOR);
   drawLanes();
+  drawFlys();
   player.display();
   test.display();
   vehicleTest.display();
+  drawPlayerLives();
 }
 
 void keyPressed() {
@@ -99,15 +104,18 @@ void keyPressed() {
     if (player.getY() - MOVE_AMOUNT >= 0) {
       player.moveForward(MOVE_AMOUNT);
     }
-  } else if (keyCode == DOWN) {
-    if(player.getY() + MOVE_AMOUNT < bottomBound) {
+  } 
+  else if (keyCode == DOWN) {
+    if (player.getY() + MOVE_AMOUNT < bottomBound) {
       player.moveBack(MOVE_AMOUNT);
     }
-  } else if (keyCode == LEFT) {
+  } 
+  else if (keyCode == LEFT) {
     if (player.getX() - MOVE_AMOUNT >= leftBound) {
       player.moveLeft(MOVE_AMOUNT);
     }
-  } else if (keyCode == RIGHT) {
+  } 
+  else if (keyCode == RIGHT) {
     if (player.getX() + MOVE_AMOUNT < rightBound) {
       player.moveRight(MOVE_AMOUNT);
     }
@@ -173,6 +181,24 @@ void drawLanes() {
   startLane.display();
 }
 
+void createFlys() {
+  for (int i = 0; i < 4; i++) {
+    flys.add(new Fly(i * 150, 0));
+  }
+}
+
+void drawFlys() {
+  for ( Fly fly : flys ) {
+    fly.display();
+  }
+}
+
+private void drawPlayerLives() {
+  for (int i = 0; i < player.getLives(); i++) {
+    image(loadImage("sprites/player/player-idle.gif"), 50 * i, GAME_HEIGHT - 50);
+  }
+}
+
 public void playSoundEffect(final String soundEffect) {
   Minim minim = new Minim(this);
   AudioSnippet audioSnippet = minim.loadSnippet(soundEffect);
@@ -183,5 +209,4 @@ public void playSoundEffect(final String soundEffect) {
     audioSnippet.play();
   }
 }
-
 
