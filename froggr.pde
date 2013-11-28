@@ -95,7 +95,7 @@ int bottomBound;
 long time;
 
 // regen times for lanes
-long regen = 5000;
+long regen = 4000;
   
 void setup() {
   // set time to negative regen so it draws stuff when game loads
