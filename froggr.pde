@@ -1,3 +1,5 @@
+import SimpleOpenNI.*;
+
 import ddf.minim.*;
 import java.util.Iterator;
 
@@ -98,6 +100,9 @@ long time;
 // regen times for lanes
 long regen = 4000;
 
+// kinect stuff
+SimpleOpenNI context;
+
 void setup() {
   // set time to negative regen so it draws stuff when game loads
   time = -regen;
@@ -118,6 +123,14 @@ void setup() {
 
   playerStartX = 250;  
   player = new Player(playerStartX, GAME_HEIGHT - (2 * LANE_HEIGHT), STARTING_LIVES);
+  
+  // start up kinect
+  context = new SimpleOpenNI(this);
+  if(context.isInit() == false) {
+    println("Can't init SimpleOpenNI, maybe the camera isn't connected!");
+    exit();
+    return;
+  }
 }
 
 void draw() {
