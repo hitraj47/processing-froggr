@@ -96,6 +96,7 @@ int bottomBound;
 
 // keep track of time...
 long time;
+long kinectTime;
 
 // regen times for lanes
 long regen = 4000;
@@ -112,11 +113,13 @@ color[]       userClr = new color[] {
   color(255, 0, 255), 
   color(0, 255, 255)
 };
+PVector origin;
 
 void setup() {
   // set time to negative regen so it draws stuff when game loads
   time = -regen;
-  size(GAME_WIDTH, GAME_HEIGHT);
+  kinectTime = millis();
+  size(GAME_WIDTH+300, GAME_HEIGHT);
 
   gameWon = false;
   gameOver = false;
@@ -128,7 +131,7 @@ void setup() {
 
   // set boundaries
   leftBound = 0;
-  rightBound = width;
+  rightBound = GAME_WIDTH;
   bottomBound = height - LANE_HEIGHT;
 
   playerStartX = 250;  
@@ -161,6 +164,14 @@ void draw() {
   processGameplay();
 
   drawTrackedHands();
+  drawInputInfo();
+}
+
+void drawInputInfo() {
+  noStroke();
+  fill(GAME_BACKGROUND_COLOR);
+  rect(GAME_WIDTH, 0, width-GAME_WIDTH, height);
+  
 }
 
 void drawTrackedHands() {
@@ -181,21 +192,29 @@ void drawTrackedHands() {
       strokeWeight(1);         
 
       if (vecList.size() > 0) {
-        PVector currentPoint = vecList.get(vecList.size()-1);
+        PVector currentPoint = vecList.get(0);
         PVector currentPoint2d = new PVector();
-        PVector lastPoint = vecList.get(vecList.size()-2);
+        PVector lastPoint = vecList.get(vecList.size()-1);
         PVector lastPoint2d = new PVector();
         context.convertRealWorldToProjective(currentPoint, currentPoint2d);
         context.convertRealWorldToProjective(lastPoint, lastPoint2d);
-        float buffer = 10;
-        if (currentPoint2d.x < lastPoint2d.x-buffer) {
-          if (player.getX() - MOVE_AMOUNT >= leftBound) {
-            player.moveLeft(MOVE_AMOUNT);
+        PVector origin2d = new PVector();
+        context.convertRealWorldToProjective(origin, origin2d);
+        float buffer = 40;
+        if (currentPoint2d.x < origin2d.x-buffer) {
+          if (millis() - kinectTime > 500) {
+            if (player.getX() - MOVE_AMOUNT >= leftBound) {
+              player.moveLeft(MOVE_AMOUNT);
+              kinectTime = millis();
+            }
           }
         }  
-        else if (currentPoint2d.x > lastPoint2d.x+buffer) {
-          if (player.getX() + MOVE_AMOUNT < rightBound) {
-            player.moveRight(MOVE_AMOUNT);
+        else if (currentPoint2d.x > origin2d.x+buffer) {
+          if (millis() - kinectTime > 500) {
+            if (player.getX() + MOVE_AMOUNT < rightBound) {
+              player.moveRight(MOVE_AMOUNT);
+              kinectTime = millis();
+            }
           }
         }
       }
@@ -248,6 +267,8 @@ void onCompletedGesture(SimpleOpenNI curContext, int gestureType, PVector pos)
 
   int handId = context.startTrackingHand(pos);
   println("hand stracked: " + handId);
+  
+  origin = pos;
 }
 
 void keyPressed() {
@@ -301,7 +322,7 @@ void drawMovingVehicles() {
 
 boolean isOffScreen(int x, int w) {
 
-  if (x > width || (x+w) < 0) 
+  if (x > GAME_WIDTH || (x+w) < 0) 
   {
     return true;
   } 
@@ -315,7 +336,7 @@ void generateMovingSprites() {
   boolean updateTime = false;
 
   if (millis() - time > regen) {
-    platforms.add(new Platform(width-10, waterLanes.get(0).getY(), MovingSprite.DIRECTION_LEFT, Platform.LOG, 3));
+    platforms.add(new Platform(GAME_WIDTH, waterLanes.get(0).getY(), MovingSprite.DIRECTION_LEFT, Platform.LOG, 3));
     updateTime = true;
   }
 
@@ -327,7 +348,7 @@ void generateMovingSprites() {
   }
 
   if (millis() - time > regen) {
-    platforms.add(new Platform(width-10, waterLanes.get(2).getY(), MovingSprite.DIRECTION_LEFT, Platform.LOG, 3));
+    platforms.add(new Platform(GAME_WIDTH, waterLanes.get(2).getY(), MovingSprite.DIRECTION_LEFT, Platform.LOG, 3));
     updateTime = true;
   }
 
@@ -339,12 +360,12 @@ void generateMovingSprites() {
   }
 
   if (millis() - time > regen) {
-    platforms.add(new Platform(width-10, waterLanes.get(4).getY(), MovingSprite.DIRECTION_LEFT, Platform.LILY, 3));
+    platforms.add(new Platform(GAME_WIDTH, waterLanes.get(4).getY(), MovingSprite.DIRECTION_LEFT, Platform.LILY, 3));
     updateTime = true;
   }
 
   if (millis() - time > regen) {
-    vehicles.add(new Vehicle(width-10, roadLanes.get(0).getY(), MovingSprite.DIRECTION_LEFT, Vehicle.TRUCK, 2));
+    vehicles.add(new Vehicle(GAME_WIDTH, roadLanes.get(0).getY(), MovingSprite.DIRECTION_LEFT, Vehicle.TRUCK, 2));
     updateTime = true;
   }
 
@@ -356,7 +377,7 @@ void generateMovingSprites() {
   }
 
   if (millis() - time > regen) {
-    vehicles.add(generateRandomCar(width-10, roadLanes.get(2).getY(), MovingSprite.DIRECTION_LEFT, 2));
+    vehicles.add(generateRandomCar(GAME_WIDTH, roadLanes.get(2).getY(), MovingSprite.DIRECTION_LEFT, 2));
     updateTime = true;
   }
 
@@ -484,17 +505,20 @@ private void processGameplay() {
 
   // Checks if the game is over
   if (player.getLives() == 0) {
+    fill(255, 0, 0);
     text("GAME OVER", 225, GAME_HEIGHT - 25);
     gameOver = true;
   }
 
   // Checks if the player wins the game.
   if (flysConsumed == 4) {
+    fill(0, 0, 255);
     text("YOU WIN!", 225, GAME_HEIGHT - 25);
     gameWon = true;
   }
 
   // Keeps track of the score
+  fill(0, 255, 0);
   text("SCORE: " + score, 400, GAME_HEIGHT - 25);
 }
 
