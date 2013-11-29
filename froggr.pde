@@ -1,5 +1,5 @@
 import SimpleOpenNI.*;
-
+import java.util.Map;
 import ddf.minim.*;
 import java.util.Iterator;
 
@@ -102,6 +102,15 @@ long regen = 4000;
 
 // kinect stuff
 SimpleOpenNI context;
+int handVecListSize = 20;
+Map<Integer,ArrayList<PVector>>  handPathList = new HashMap<Integer,ArrayList<PVector>>();
+color[]       userClr = new color[]{ color(255,0,0),
+                                     color(0,255,0),
+                                     color(0,0,255),
+                                     color(255,255,0),
+                                     color(255,0,255),
+                                     color(0,255,255)
+                                   };
 
 void setup() {
   // set time to negative regen so it draws stuff when game loads
@@ -130,10 +139,16 @@ void setup() {
     println("Can't init SimpleOpenNI, maybe the camera isn't connected!");
     exit();
     return;
-  }
+  }  
+  context.enableDepth();
+  context.enableHand();
+  context.startGesture(SimpleOpenNI.GESTURE_WAVE);
 }
 
 void draw() {
+  // update kinect cam
+  context.update();
+  
   background(GAME_BACKGROUND_COLOR);
   drawLanes();
   drawFlys();
@@ -143,6 +158,86 @@ void draw() {
   drawMovingVehicles();
   drawPlayerLives();
   processGameplay();
+  
+  drawTrackedHands();
+}
+
+void drawTrackedHands() {
+  // draw the tracked hands
+  if(handPathList.size() > 0)  
+  {    
+    Iterator itr = handPathList.entrySet().iterator();     
+    while(itr.hasNext())
+    {
+      Map.Entry mapEntry = (Map.Entry)itr.next(); 
+      int handId =  (Integer)mapEntry.getKey();
+      ArrayList<PVector> vecList = (ArrayList<PVector>)mapEntry.getValue();
+      PVector p;
+      PVector p2d = new PVector();
+      
+        stroke(userClr[ (handId - 1) % userClr.length ]);
+        noFill(); 
+        strokeWeight(1);        
+        Iterator itrVec = vecList.iterator(); 
+        beginShape();
+          while( itrVec.hasNext() ) 
+          { 
+            p = (PVector) itrVec.next(); 
+            
+            context.convertRealWorldToProjective(p,p2d);
+            vertex(p2d.x,p2d.y);
+          }
+        endShape();   
+  
+        stroke(userClr[ (handId - 1) % userClr.length ]);
+        strokeWeight(4);
+        p = vecList.get(0);
+        context.convertRealWorldToProjective(p,p2d);
+        point(p2d.x,p2d.y);
+ 
+    }        
+  }
+}
+
+void onNewHand(SimpleOpenNI curContext,int handId,PVector pos)
+{
+  println("onNewHand - handId: " + handId + ", pos: " + pos);
+ 
+  ArrayList<PVector> vecList = new ArrayList<PVector>();
+  vecList.add(pos);
+  
+  handPathList.put(handId,vecList);
+}
+
+void onTrackedHand(SimpleOpenNI curContext,int handId,PVector pos)
+{
+  //println("onTrackedHand - handId: " + handId + ", pos: " + pos );
+  
+  ArrayList<PVector> vecList = handPathList.get(handId);
+  if(vecList != null)
+  {
+    vecList.add(0,pos);
+    if(vecList.size() >= handVecListSize)
+      // remove the last point 
+      vecList.remove(vecList.size()-1); 
+  }  
+}
+
+void onLostHand(SimpleOpenNI curContext,int handId)
+{
+  println("onLostHand - handId: " + handId);
+  handPathList.remove(handId);
+}
+
+// -----------------------------------------------------------------
+// gesture events
+
+void onCompletedGesture(SimpleOpenNI curContext,int gestureType, PVector pos)
+{
+  println("onCompletedGesture - gestureType: " + gestureType + ", pos: " + pos);
+  
+  int handId = context.startTrackingHand(pos);
+  println("hand stracked: " + handId);
 }
 
 void keyPressed() {
