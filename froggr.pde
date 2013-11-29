@@ -103,14 +103,15 @@ long regen = 4000;
 // kinect stuff
 SimpleOpenNI context;
 int handVecListSize = 20;
-Map<Integer,ArrayList<PVector>>  handPathList = new HashMap<Integer,ArrayList<PVector>>();
-color[]       userClr = new color[]{ color(255,0,0),
-                                     color(0,255,0),
-                                     color(0,0,255),
-                                     color(255,255,0),
-                                     color(255,0,255),
-                                     color(0,255,255)
-                                   };
+Map<Integer, ArrayList<PVector>>  handPathList = new HashMap<Integer, ArrayList<PVector>>();
+color[]       userClr = new color[] { 
+  color(255, 0, 0), 
+  color(0, 255, 0), 
+  color(0, 0, 255), 
+  color(255, 255, 0), 
+  color(255, 0, 255), 
+  color(0, 255, 255)
+};
 
 void setup() {
   // set time to negative regen so it draws stuff when game loads
@@ -132,10 +133,10 @@ void setup() {
 
   playerStartX = 250;  
   player = new Player(playerStartX, GAME_HEIGHT - (2 * LANE_HEIGHT), STARTING_LIVES);
-  
+
   // start up kinect
   context = new SimpleOpenNI(this);
-  if(context.isInit() == false) {
+  if (context.isInit() == false) {
     println("Can't init SimpleOpenNI, maybe the camera isn't connected!");
     exit();
     return;
@@ -148,7 +149,7 @@ void setup() {
 void draw() {
   // update kinect cam
   context.update();
-  
+
   background(GAME_BACKGROUND_COLOR);
   drawLanes();
   drawFlys();
@@ -158,72 +159,81 @@ void draw() {
   drawMovingVehicles();
   drawPlayerLives();
   processGameplay();
-  
+
   drawTrackedHands();
 }
 
 void drawTrackedHands() {
   // draw the tracked hands
-  if(handPathList.size() > 0)  
+  if (handPathList.size() > 0)  
   {    
     Iterator itr = handPathList.entrySet().iterator();     
-    while(itr.hasNext())
+    while (itr.hasNext ())
     {
       Map.Entry mapEntry = (Map.Entry)itr.next(); 
       int handId =  (Integer)mapEntry.getKey();
       ArrayList<PVector> vecList = (ArrayList<PVector>)mapEntry.getValue();
       PVector p;
       PVector p2d = new PVector();
-      
-        stroke(userClr[ (handId - 1) % userClr.length ]);
-        noFill(); 
-        strokeWeight(1);        
-        Iterator itrVec = vecList.iterator(); 
-        beginShape();
-          while( itrVec.hasNext() ) 
-          { 
-            p = (PVector) itrVec.next(); 
-            
-            context.convertRealWorldToProjective(p,p2d);
-            vertex(p2d.x,p2d.y);
+
+      stroke(userClr[ (handId - 1) % userClr.length ]);
+      noFill(); 
+      strokeWeight(1);         
+
+      if (vecList.size() > 0) {
+        PVector currentPoint = vecList.get(vecList.size()-1);
+        PVector currentPoint2d = new PVector();
+        PVector lastPoint = vecList.get(vecList.size()-2);
+        PVector lastPoint2d = new PVector();
+        context.convertRealWorldToProjective(currentPoint, currentPoint2d);
+        context.convertRealWorldToProjective(lastPoint, lastPoint2d);
+        float buffer = 10;
+        if (currentPoint2d.x < lastPoint2d.x-buffer) {
+          if (player.getX() - MOVE_AMOUNT >= leftBound) {
+            player.moveLeft(MOVE_AMOUNT);
           }
-        endShape();   
-  
-        stroke(userClr[ (handId - 1) % userClr.length ]);
-        strokeWeight(4);
-        p = vecList.get(0);
-        context.convertRealWorldToProjective(p,p2d);
-        point(p2d.x,p2d.y);
- 
-    }        
+        }  
+        else if (currentPoint2d.x > lastPoint2d.x+buffer) {
+          if (player.getX() + MOVE_AMOUNT < rightBound) {
+            player.moveRight(MOVE_AMOUNT);
+          }
+        }
+      }
+
+      stroke(userClr[ (handId - 1) % userClr.length ]);
+      strokeWeight(4);
+      p = vecList.get(0);
+      context.convertRealWorldToProjective(p, p2d);
+      point(p2d.x, p2d.y);
+    }
   }
 }
 
-void onNewHand(SimpleOpenNI curContext,int handId,PVector pos)
+void onNewHand(SimpleOpenNI curContext, int handId, PVector pos)
 {
   println("onNewHand - handId: " + handId + ", pos: " + pos);
- 
+
   ArrayList<PVector> vecList = new ArrayList<PVector>();
   vecList.add(pos);
-  
-  handPathList.put(handId,vecList);
+
+  handPathList.put(handId, vecList);
 }
 
-void onTrackedHand(SimpleOpenNI curContext,int handId,PVector pos)
+void onTrackedHand(SimpleOpenNI curContext, int handId, PVector pos)
 {
   //println("onTrackedHand - handId: " + handId + ", pos: " + pos );
-  
+
   ArrayList<PVector> vecList = handPathList.get(handId);
-  if(vecList != null)
+  if (vecList != null)
   {
-    vecList.add(0,pos);
-    if(vecList.size() >= handVecListSize)
+    vecList.add(0, pos);
+    if (vecList.size() >= handVecListSize)
       // remove the last point 
-      vecList.remove(vecList.size()-1); 
-  }  
+      vecList.remove(vecList.size()-1);
+  }
 }
 
-void onLostHand(SimpleOpenNI curContext,int handId)
+void onLostHand(SimpleOpenNI curContext, int handId)
 {
   println("onLostHand - handId: " + handId);
   handPathList.remove(handId);
@@ -232,10 +242,10 @@ void onLostHand(SimpleOpenNI curContext,int handId)
 // -----------------------------------------------------------------
 // gesture events
 
-void onCompletedGesture(SimpleOpenNI curContext,int gestureType, PVector pos)
+void onCompletedGesture(SimpleOpenNI curContext, int gestureType, PVector pos)
 {
   println("onCompletedGesture - gestureType: " + gestureType + ", pos: " + pos);
-  
+
   int handId = context.startTrackingHand(pos);
   println("hand stracked: " + handId);
 }
