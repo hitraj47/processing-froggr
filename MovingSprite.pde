@@ -44,11 +44,11 @@ class MovingSprite extends Sprite {
     }
   }
   
-  public void move() {
+  public void move(int _speed) {
     if (direction.equals(DIRECTION_LEFT)) {
-      setX(getX() - 2);
+      setX(getX() - _speed);
     } else {
-      setX(getX() + 2);
+      setX(getX() + _speed);
     }      
   }
   

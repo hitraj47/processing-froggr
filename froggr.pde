@@ -115,6 +115,9 @@ color[]       userClr = new color[] {
 };
 PVector origin;
 
+// speed of moving objects
+int speed;
+
 void setup() {
   // set time to negative regen so it draws stuff when game loads
   time = -regen;
@@ -141,9 +144,11 @@ void setup() {
   context = new SimpleOpenNI(this);
   if (context.isInit() == false) {
     println("Can't init SimpleOpenNI, maybe the camera isn't connected!");
-    exit();
-    return;
-  }  
+    // set speed to 2 to compensate for kinect
+    speed = 1;
+  } else {
+    speed = 2;
+  }
   context.enableDepth();
   context.enableHand();
   context.startGesture(SimpleOpenNI.GESTURE_WAVE);
@@ -324,7 +329,7 @@ void drawMovingPlatforms() {
   Iterator<Platform> pi = platforms.iterator();
   while (pi.hasNext ()) {
     Platform p = pi.next();
-    p.move();
+    p.move(speed);
     if (isOffScreen(p.getX(), p.getWidth())) {
       p.removeSprite();
       pi.remove();
@@ -337,7 +342,7 @@ void drawMovingVehicles() {
   Iterator<Vehicle> vi = vehicles.iterator();
   while (vi.hasNext ()) {
     Vehicle v = vi.next();
-    v.move();
+    v.move(speed);
     if (isOffScreen(v.getX(), v.getWidth())) {
       v.removeSprite();
       vi.remove();
