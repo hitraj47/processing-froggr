@@ -200,7 +200,7 @@ void drawTrackedHands() {
         context.convertRealWorldToProjective(lastPoint, lastPoint2d);
         PVector origin2d = new PVector();
         context.convertRealWorldToProjective(origin, origin2d);
-        float buffer = 100;
+        float buffer = 50;
 
         drawMovementBounds(origin2d, buffer);
         if (currentPoint2d.x < origin2d.x-buffer) {
@@ -229,8 +229,8 @@ void drawTrackedHands() {
         } 
         else if (currentPoint2d.y > origin2d.y+buffer) {
           if (millis() - kinectTime > 500) {
-            if (player.getX() + MOVE_AMOUNT < rightBound) {
-              player.moveRight(MOVE_AMOUNT);
+            if (player.getY() + MOVE_AMOUNT < bottomBound) {
+              player.moveBack(MOVE_AMOUNT);
               kinectTime = millis();
             }
           }
@@ -240,7 +240,7 @@ void drawTrackedHands() {
         strokeWeight(4);
         p = vecList.get(0);
         context.convertRealWorldToProjective(p, p2d);
-        point(p2d.x+300, p2d.y);
+        point(p2d.x+350, p2d.y);
       }
     }
   }
@@ -251,7 +251,7 @@ void drawMovementBounds(PVector origin, float buffer) {
   ellipseMode(CENTER);
   noFill();
   stroke(0, 255, 0);
-  ellipse(origin.x+300, origin.y, buffer*2, buffer*2);
+  ellipse(origin.x+350, origin.y, buffer*2, buffer*2);
 }
 
 void onNewHand(SimpleOpenNI curContext, int handId, PVector pos)
