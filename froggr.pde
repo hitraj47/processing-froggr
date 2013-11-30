@@ -99,7 +99,7 @@ long time;
 long kinectTime;
 
 // regen times for lanes
-long regen = 4000;
+long regen = 6000;
 
 // kinect stuff
 SimpleOpenNI context;
@@ -200,7 +200,7 @@ void drawTrackedHands() {
         context.convertRealWorldToProjective(lastPoint, lastPoint2d);
         PVector origin2d = new PVector();
         context.convertRealWorldToProjective(origin, origin2d);
-        float buffer = 50;
+        float buffer = 40;
 
         drawMovementBounds(origin2d, buffer);
         if (currentPoint2d.x < origin2d.x-buffer) {
