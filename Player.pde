@@ -4,12 +4,12 @@ class Player extends Sprite {
 
   private boolean alive;
   
-  private static final String IMAGE_FORWARD = "sprites/player/player-forward.gif";
-  private static final String IMAGE_BACK = "sprites/player/player-back.gif";
-  private static final String IMAGE_LEFT = "sprites/player/player-left.gif";
-  private static final String IMAGE_RIGHT = "sprites/player/player-right.gif";
-  private static final String IMAGE_IDLE = "sprites/player/player-idle.gif";
-  private static final String IMAGE_DEATH = "sprites/player/player-death.gif";
+  public static final String IMAGE_FORWARD = "sprites/player/player-forward.gif";
+  public static final String IMAGE_BACK = "sprites/player/player-back.gif";
+  public static final String IMAGE_LEFT = "sprites/player/player-left.gif";
+  public static final String IMAGE_RIGHT = "sprites/player/player-right.gif";
+  public static final String IMAGE_IDLE = "sprites/player/player-idle.gif";
+  public static final String IMAGE_DEATH = "sprites/player/player-death.gif";
 
   public Player(int _x, int _y, int _lives) {
     super(loadImage(IMAGE_IDLE), _x, _y);

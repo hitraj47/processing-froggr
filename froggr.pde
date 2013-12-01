@@ -163,6 +163,8 @@ void setup() {
   context.startGesture(SimpleOpenNI.GESTURE_WAVE);
   
   btnRestart = new Button("Restart Game", GAME_WIDTH/2 + 100, GAME_HEIGHT - 30, 100, 30);
+  btnRestart.setBorderColor(0, 255, 0);
+  btnRestart.setLabelColor(0, 128, 0);
 }
 
 void draw() {
@@ -188,7 +190,41 @@ void draw() {
 void drawRestartButton() {
   if (gameWon || gameOver) {
     btnRestart.display();
+    if (btnRestart.isMouseOverButton()) {
+      btnRestart.setUpdating(true);
+    } else {
+      btnRestart.setUpdating(false);
+    }
   }
+}
+
+void mousePressed() {
+  if (btnRestart.isMouseOverButton()) {
+    btnRestart.setUpdating(true);
+  }
+}
+
+void mouseReleased() {
+  if (btnRestart.isMouseOverButton()) {
+    if (gameWon || gameOver) {
+      restartGame();
+    }
+  }
+}
+
+void restartGame() {
+  // set all flys to, er, not consumed
+  for (Fly f : flys) {
+    f.setConsumed(false);
+  }
+  flysConsumed = 0;
+  
+  // remove the player
+  player.removeSprite();
+  
+  // reset game won/over variables
+  gameWon = false;
+  gameOver = false;
 }
 
 void drawInputInfo() {
@@ -545,7 +581,11 @@ public void playSoundEffect(final String soundEffect) {
 }
 
 private void spawnPlayer(int _lives) {
-  player = new Player(playerStartX, GAME_HEIGHT - (2 * LANE_HEIGHT), _lives);
+  player.setX(playerStartX);
+  player.setY(GAME_HEIGHT - (2 * LANE_HEIGHT));
+  player.setLives(_lives);
+  player.setAlive(true);
+  player.setImage(loadImage(Player.IMAGE_IDLE));
 }
 
 private void processGameplay() {
@@ -597,7 +637,6 @@ private void processPlayer() {
       if (player.isAlive()) {
         playSoundEffect(COLLISION);
         player.kill();
-        image(player.getImage(), player.getX(), player.getY());
       }
     }
   }
