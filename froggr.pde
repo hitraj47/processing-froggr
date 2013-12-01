@@ -123,6 +123,9 @@ int speed;
 // a PApplet class referring to this, for use with animated gifs
 public static PApplet applet;
 
+// restart game button
+Button btnRestart;
+
 void setup() {
   applet = this;
   // set time to negative regen so it draws stuff when game loads
@@ -158,6 +161,8 @@ void setup() {
   context.enableDepth();
   context.enableHand();
   context.startGesture(SimpleOpenNI.GESTURE_WAVE);
+  
+  btnRestart = new Button("Restart Game", GAME_WIDTH/2 + 100, GAME_HEIGHT - 30, 100, 30);
 }
 
 void draw() {
@@ -174,14 +179,22 @@ void draw() {
   drawPlayerLives();
   processGameplay();
 
-
   drawInputInfo();
   drawTrackedHands();
+  
+  drawRestartButton();
+}
+
+void drawRestartButton() {
+  if (gameWon || gameOver) {
+    btnRestart.display();
+  }
 }
 
 void drawInputInfo() {
   noStroke();
   fill(GAME_BACKGROUND_COLOR);
+  rectMode(CORNER);
   rect(GAME_WIDTH, 0, width-GAME_WIDTH, height);
 }
 
@@ -532,7 +545,7 @@ public void playSoundEffect(final String soundEffect) {
 }
 
 private void spawnPlayer(int _lives) {
-  this.player = new Player(playerStartX, GAME_HEIGHT - (2 * LANE_HEIGHT), _lives);
+  player = new Player(playerStartX, GAME_HEIGHT - (2 * LANE_HEIGHT), _lives);
 }
 
 private void processGameplay() {
@@ -543,20 +556,23 @@ private void processGameplay() {
   // Checks if the game is over
   if (player.getLives() == 0) {
     fill(255, 0, 0);
-    text("GAME OVER", 225, GAME_HEIGHT - 25);
+    textSize(12);
+    text("GAME OVER", 215, GAME_HEIGHT - 25);
     gameOver = true;
   }
 
   // Checks if the player wins the game.
   if (flysConsumed == 4) {
     fill(0, 0, 255);
-    text("YOU WIN!", 225, GAME_HEIGHT - 25);
+    textSize(12);
+    text("YOU WIN!", 215, GAME_HEIGHT - 25);
     gameWon = true;
   }
 
   // Keeps track of the score
   fill(0, 255, 0);
-  text("SCORE: " + score, 400, GAME_HEIGHT - 25);
+  textSize(12);
+  text("SCORE: " + score, 415, GAME_HEIGHT - 25);
 }
 
 private void processPlayer() {
