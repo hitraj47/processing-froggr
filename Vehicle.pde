@@ -26,7 +26,7 @@ class Vehicle extends MovingSprite {
   public static final String TRUCK = "truck";
   
   public Vehicle(int _x, int _y, String _direction, String _vehicleType, int _length) {
-    super(loadImage("sprites/vehicle/" + _vehicleType + "-" + _direction + "-" + _length + ".gif"), _x, _y, _direction);
+    super("sprites/vehicle/" + _vehicleType + "-" + _direction + "-" + _length + ".gif", _x, _y, _direction);
     this.vehicleType = _vehicleType;
     this.length = _length;    
   }

@@ -6,6 +6,7 @@ class Sprite {
   private boolean removed;
   private boolean animated;
   private Gif animatedImage;
+  private PImage[] frames;
   
   public Sprite(PImage _image, int _x, int _y) {
     this.image = _image;
@@ -18,6 +19,7 @@ class Sprite {
   public Sprite(String _imageLocation, int _x, int _y) {
     this.animatedImage = new Gif(froggr.applet, _imageLocation);
     this.animatedImage.loop();
+    this.frames = Gif.getPImages(froggr.applet, _imageLocation);
     this.x = _x;
     this.y = _y;
     this.removed = false;
@@ -78,15 +80,27 @@ class Sprite {
   }
   
   public int getWidth() {
-    return image.width;
+    if (animated) {
+      return frames[0].width;
+    } else {
+      return image.width;
+    }
   }
   
   public int getHeight() {
-    return image.height;
+    if (animated) {
+      return frames[0].height;
+    } else {
+      return image.height;
+    }
   }
   
   public void display() {
-    image(image, x, y);    
+    if (animated) {
+      image(animatedImage, x, y);
+    } else {
+      image(image, x, y);
+    }    
   }
   
   public boolean hasCollidedWith(Sprite _sprite, int _buffer) {

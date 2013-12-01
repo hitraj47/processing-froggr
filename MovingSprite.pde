@@ -20,6 +20,11 @@ class MovingSprite extends Sprite {
     this.direction = _direction;
   }
   
+  public MovingSprite(String _image, int _x, int _y, String _direction) {
+    super(_image, _x, _y);
+    this.direction = _direction;
+  }
+  
   public String getDirection() {
     return this.direction;
   }
