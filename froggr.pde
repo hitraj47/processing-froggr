@@ -180,11 +180,9 @@ void draw() {
   drawMovingVehicles();
   drawPlayerLives();
   processGameplay();
-
+  drawRestartButton();
   drawInputInfo();
   drawTrackedHands();
-
-  drawRestartButton();
 }
 
 void drawRestartButton() {
@@ -196,6 +194,12 @@ void drawRestartButton() {
     else {
       btnRestart.setUpdating(false);
     }
+  } 
+  else {
+    fill(GAME_BACKGROUND_COLOR);
+    rectMode(CORNER);
+    noStroke();
+    rect(btnRestart.getXPosition()-btnRestart.getWidth()/2, GAME_HEIGHT - LANE_HEIGHT, btnRestart.getWidth(), LANE_HEIGHT);
   }
 }
 
@@ -223,14 +227,14 @@ void restartGame() {
   // reset game won/over variables
   gameWon = false;
   gameOver = false;
-  
+
   // reset score
   score = 0;
-  
+
   // remove all moving sprites
   vehicles.clear();
   platforms.clear();
-  
+
   // reset time
   time = -regen;
 }
