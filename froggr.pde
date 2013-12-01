@@ -1,5 +1,4 @@
 import gifAnimation.*;
-
 import SimpleOpenNI.*;
 import java.util.Map;
 import ddf.minim.*;
@@ -155,13 +154,14 @@ void setup() {
     println("Can't init SimpleOpenNI, maybe the camera isn't connected!");
     // set speed to 2 to compensate for kinect
     speed = 1;
-  } else {
+  } 
+  else {
     speed = 2;
   }
   context.enableDepth();
   context.enableHand();
   context.startGesture(SimpleOpenNI.GESTURE_WAVE);
-  
+
   btnRestart = new Button("Restart Game", GAME_WIDTH/2 + 100, GAME_HEIGHT - 30, 100, 30);
   btnRestart.setBorderColor(0, 255, 0);
   btnRestart.setLabelColor(0, 128, 0);
@@ -183,7 +183,7 @@ void draw() {
 
   drawInputInfo();
   drawTrackedHands();
-  
+
   drawRestartButton();
 }
 
@@ -192,7 +192,8 @@ void drawRestartButton() {
     btnRestart.display();
     if (btnRestart.isMouseOverButton()) {
       btnRestart.setUpdating(true);
-    } else {
+    } 
+    else {
       btnRestart.setUpdating(false);
     }
   }
@@ -218,13 +219,20 @@ void restartGame() {
     f.setConsumed(false);
   }
   flysConsumed = 0;
-  
-  // remove the player
-  player.removeSprite();
-  
+
   // reset game won/over variables
   gameWon = false;
   gameOver = false;
+  
+  // reset score
+  score = 0;
+  
+  // remove all moving sprites
+  vehicles.clear();
+  platforms.clear();
+  
+  // reset time
+  time = -regen;
 }
 
 void drawInputInfo() {
@@ -358,24 +366,26 @@ void onCompletedGesture(SimpleOpenNI curContext, int gestureType, PVector pos)
 }
 
 void keyPressed() {
-  if (keyCode == UP) {
-    if (player.getY() - MOVE_AMOUNT >= 0) {
-      player.moveForward(MOVE_AMOUNT);
-    }
-  } 
-  else if (keyCode == DOWN) {
-    if (player.getY() + MOVE_AMOUNT < bottomBound) {
-      player.moveBack(MOVE_AMOUNT);
-    }
-  } 
-  else if (keyCode == LEFT) {
-    if (player.getX() - MOVE_AMOUNT >= leftBound) {
-      player.moveLeft(MOVE_AMOUNT);
-    }
-  } 
-  else if (keyCode == RIGHT) {
-    if (player.getX() + MOVE_AMOUNT < rightBound) {
-      player.moveRight(MOVE_AMOUNT);
+  if (!gameOver && !gameWon) {
+    if (keyCode == UP) {
+      if (player.getY() - MOVE_AMOUNT >= 0) {
+        player.moveForward(MOVE_AMOUNT);
+      }
+    } 
+    else if (keyCode == DOWN) {
+      if (player.getY() + MOVE_AMOUNT < bottomBound) {
+        player.moveBack(MOVE_AMOUNT);
+      }
+    } 
+    else if (keyCode == LEFT) {
+      if (player.getX() - MOVE_AMOUNT >= leftBound) {
+        player.moveLeft(MOVE_AMOUNT);
+      }
+    } 
+    else if (keyCode == RIGHT) {
+      if (player.getX() + MOVE_AMOUNT < rightBound) {
+        player.moveRight(MOVE_AMOUNT);
+      }
     }
   }
 }
