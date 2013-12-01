@@ -54,8 +54,10 @@ class Sprite {
     return this.animatedImage;
   }
   
-  public void setAnimatedImage(Gif _animatedImage) {
-    this.animatedImage = _animatedImage;
+  public void setAnimatedImage(String _animatedImage) {
+    this.animatedImage = new Gif(froggr.applet, _animatedImage);
+    this.animatedImage.loop();
+    this.frames = Gif.getPImages(froggr.applet, _animatedImage);
   }
   
   public int getX() {

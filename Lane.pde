@@ -12,6 +12,10 @@ class Lane extends Sprite {
   public Lane(int _x, int _y, String _laneType) {
     super(loadImage("sprites/lane/" + _laneType), _x, _y);
     this.laneType = _laneType;
+    if (laneType.equals(LANE_WATER)) {
+      this.setAnimated(true);
+      this.setAnimatedImage("sprites/lane/" + LANE_WATER);
+    }
   }
   
 }
