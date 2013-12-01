@@ -4,12 +4,32 @@ class Sprite {
   private int x;
   private int y;
   private boolean removed;
+  private boolean animated;
+  private Gif animatedImage;
   
   public Sprite(PImage _image, int _x, int _y) {
     this.image = _image;
     this.x = _x;
     this.y = _y;
     this.removed = false;
+    this.animated = false;
+  }
+  
+  public Sprite(String _imageLocation, int _x, int _y) {
+    this.animatedImage = new Gif(froggr.applet, _imageLocation);
+    this.animatedImage.loop();
+    this.x = _x;
+    this.y = _y;
+    this.removed = false;
+    this.animated = true;
+  }
+  
+  public void setAnimated(boolean _animated) {
+    this.animated = _animated;
+  }
+  
+  public boolean isAnimated() {
+    return this.animated;
   }
   
   public void removeSprite() {
@@ -26,6 +46,14 @@ class Sprite {
   
   public void setImage(PImage _image) {
     this.image = _image;
+  }
+  
+  public Gif getAnimatedImage() {
+    return this.animatedImage;
+  }
+  
+  public void setAnimatedImage(Gif _animatedImage) {
+    this.animatedImage = _animatedImage;
   }
   
   public int getX() {
@@ -58,9 +86,7 @@ class Sprite {
   }
   
   public void display() {
-    
-    image(image, x, y);
-    
+    image(image, x, y);    
   }
   
   public boolean hasCollidedWith(Sprite _sprite, int _buffer) {

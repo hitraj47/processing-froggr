@@ -1,3 +1,5 @@
+import gifAnimation.*;
+
 import SimpleOpenNI.*;
 import java.util.Map;
 import ddf.minim.*;
@@ -118,7 +120,11 @@ PVector origin;
 // speed of moving objects
 int speed;
 
+// a PApplet class referring to this, for use with animated gifs
+public static PApplet applet;
+
 void setup() {
+  applet = this;
   // set time to negative regen so it draws stuff when game loads
   time = -regen;
   kinectTime = millis();
