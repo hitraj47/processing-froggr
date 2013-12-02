@@ -123,7 +123,7 @@ int speed;
 public static PApplet applet;
 
 // variable to determine whether in applet mode
-boolean appletMode = true;
+boolean appletMode = false;
 
 // width of kinect input area
 public static final int KINECT_INPUT_AREA_WIDTH = 300;
