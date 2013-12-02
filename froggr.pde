@@ -305,11 +305,16 @@ void drawTrackedHands() {
         context.convertRealWorldToProjective(lastPoint, lastPoint2d);
         PVector origin2d = new PVector();
         context.convertRealWorldToProjective(origin, origin2d);
+        
+        // allow some space for input
         float buffer = 40;
+        
+        // time to wait for next kinect input
+        long timeToWait = 500;
 
         drawMovementBounds(origin2d, buffer);
         if (currentPoint2d.x < origin2d.x-buffer) {
-          if (millis() - kinectTime > 500) {
+          if (millis() - kinectTime > timeToWait) {
             if (player.getX() - MOVE_AMOUNT >= leftBound) {
               player.moveLeft(MOVE_AMOUNT);
               kinectTime = millis();
@@ -317,7 +322,7 @@ void drawTrackedHands() {
           }
         } 
         else if (currentPoint2d.x > origin2d.x+buffer) {
-          if (millis() - kinectTime > 500) {
+          if (millis() - kinectTime > timeToWait) {
             if (player.getX() + MOVE_AMOUNT < rightBound) {
               player.moveRight(MOVE_AMOUNT);
               kinectTime = millis();
@@ -325,7 +330,7 @@ void drawTrackedHands() {
           }
         } 
         else if (currentPoint2d.y < origin2d.y-buffer) {
-          if (millis() - kinectTime > 500) {
+          if (millis() - kinectTime > timeToWait) {
             if (player.getY() - MOVE_AMOUNT >= 0) {
               player.moveForward(MOVE_AMOUNT);
               kinectTime = millis();
@@ -333,7 +338,7 @@ void drawTrackedHands() {
           }
         } 
         else if (currentPoint2d.y > origin2d.y+buffer) {
-          if (millis() - kinectTime > 500) {
+          if (millis() - kinectTime > timeToWait) {
             if (player.getY() + MOVE_AMOUNT < bottomBound) {
               player.moveBack(MOVE_AMOUNT);
               kinectTime = millis();
@@ -345,7 +350,7 @@ void drawTrackedHands() {
         strokeWeight(4);
         p = vecList.get(0);
         context.convertRealWorldToProjective(p, p2d);
-        point(p2d.x+350, p2d.y);
+        point(p2d.x+KINECT_INPUT_AREA_WIDTH, p2d.y);
       }
     }
   }
@@ -356,7 +361,7 @@ void drawMovementBounds(PVector origin, float buffer) {
   ellipseMode(CENTER);
   noFill();
   stroke(0, 255, 0);
-  ellipse(origin.x+350, origin.y, buffer*2, buffer*2);
+  ellipse(origin.x+KINECT_INPUT_AREA_WIDTH, origin.y, buffer*2, buffer*2);
 }
 
 void onNewHand(SimpleOpenNI curContext, int handId, PVector pos)
