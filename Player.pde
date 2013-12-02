@@ -54,11 +54,11 @@ class Player extends Sprite {
     }
   }
   
-  public void sail(Platform platform) {
+  public void sail(Platform platform, int speed) {
     if (platform.getDirection() == MovingSprite.DIRECTION_LEFT) {
-      setX(getX() - 1);
+      setX(getX() - speed);
     } else if (platform.getDirection() == MovingSprite.DIRECTION_RIGHT) {
-      setX(getX() + 1);
+      setX(getX() + speed);
     }
 
     if (getX() == platform.getOffScreenXPosition()) {

@@ -100,7 +100,7 @@ long time;
 long kinectTime;
 
 // regen times for lanes
-long regen = 6000;
+long regen;
 
 // kinect stuff
 SimpleOpenNI context;
@@ -127,8 +127,6 @@ Button btnRestart;
 
 void setup() {
   applet = this;
-  // set time to negative regen so it draws stuff when game loads
-  time = -regen;
   kinectTime = millis();
   size(GAME_WIDTH+300, GAME_HEIGHT);
 
@@ -152,11 +150,21 @@ void setup() {
   context = new SimpleOpenNI(this);
   if (context.isInit() == false) {
     println("Can't init SimpleOpenNI, maybe the camera isn't connected!");
-    // set speed to 2 to compensate for kinect
+    // set speed slower to compensate for no kinect
     speed = 1;
+    // lane regen
+    regen = 6000;
   } 
   else {
-    speed = 2;
+    /*
+    * set this speed to 2 when kinect is connected for regular speed.
+     * set at 1 for now because 2 is a little difficult with kinect
+     */
+    speed = 1;
+
+    // with kinect, the lane regen needs to be increased
+    // so platforms dont overlap
+    regen = 10000;
   }
   context.enableDepth();
   context.enableHand();
@@ -165,6 +173,9 @@ void setup() {
   btnRestart = new Button("Restart Game", GAME_WIDTH/2 + 100, GAME_HEIGHT - 30, 100, 30);
   btnRestart.setBorderColor(0, 255, 0);
   btnRestart.setLabelColor(0, 128, 0);
+
+  // set time to negative regen so it draws stuff when game loads
+  time = -regen;
 }
 
 void draw() {
@@ -665,7 +676,7 @@ private void processPlayer() {
     for (int i = 0; i < platforms.size(); i++) {
       // Checks if player lands on platform, if so he will sail on it.
       if (platforms.get(i).hasCollidedWith(player, 0)) {
-        player.sail(platforms.get(i));
+        player.sail(platforms.get(i), speed);
         currentPlatform = i;
       }
     }
