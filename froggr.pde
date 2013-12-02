@@ -101,7 +101,7 @@ long time;
 long kinectTime;
 
 // regen times for lanes
-long regen = 6000;
+long regen;
 
 // kinect stuff
 SimpleOpenNI context;
@@ -125,8 +125,6 @@ public static PApplet applet;
 
 void setup() {
   applet = this;
-  // set time to negative regen so it draws stuff when game loads
-  time = -regen;
   kinectTime = millis();
   size(GAME_WIDTH+300, GAME_HEIGHT);
 
@@ -150,14 +148,29 @@ void setup() {
   context = new SimpleOpenNI(this);
   if (context.isInit() == false) {
     println("Can't init SimpleOpenNI, maybe the camera isn't connected!");
-    // set speed to 2 to compensate for kinect
+    // set speed slower to compensate for no kinect
     speed = 1;
-  } else {
-    speed = 2;
+
+    // lane regen
+    regen = 6000;
+  } 
+  else {
+    /*
+    * set this speed to 2 when kinect is connected for regular speed.
+     * set at 1 for now because 2 is a little difficult with kinect
+     */
+    speed = 1;
+    
+    // with kinect, the lane regen needs to be increased
+    // so platforms dont overlap
+    regen = 10000;
   }
   context.enableDepth();
   context.enableHand();
   context.startGesture(SimpleOpenNI.GESTURE_WAVE);
+
+  // set time to negative regen so it draws stuff when game loads
+  time = -regen;
 }
 
 void draw() {
