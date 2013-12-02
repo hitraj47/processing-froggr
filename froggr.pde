@@ -122,13 +122,24 @@ int speed;
 // a PApplet class referring to this, for use with animated gifs
 public static PApplet applet;
 
+// variable to determine whether in applet mode
+boolean appletMode = false;
+
+// width of kinect input area
+public static final int KINECT_INPUT_AREA = 300;
+
 // restart game button
 Button btnRestart;
 
 void setup() {
   applet = this;
   kinectTime = millis();
-  size(GAME_WIDTH+300, GAME_HEIGHT);
+  if (appletMode) {
+    size(GAME_WIDTH, GAME_HEIGHT);
+  } 
+  else {
+    size(GAME_WIDTH+KINECT_INPUT_AREA, GAME_HEIGHT);
+  }
 
   gameWon = false;
   gameOver = false;
@@ -147,28 +158,34 @@ void setup() {
   player = new Player(playerStartX, GAME_HEIGHT - (2 * LANE_HEIGHT), STARTING_LIVES);
 
   // start up kinect
-  context = new SimpleOpenNI(this);
-  if (context.isInit() == false) {
-    println("Can't init SimpleOpenNI, maybe the camera isn't connected!");
-    // set speed slower to compensate for no kinect
-    speed = 1;
-    // lane regen
-    regen = 6000;
+  if (!appletMode) {
+    context = new SimpleOpenNI(this);
+    if (context.isInit() == false) {
+      println("Can't init SimpleOpenNI, maybe the camera isn't connected!");
+      // set speed slower to compensate for no kinect
+      speed = 1;
+      // lane regen
+      regen = 6000;
+    } 
+    else {
+      /*
+    * set this speed to 2 when kinect is connected for regular speed.
+       * set at 1 for now because 2 is a little difficult with kinect
+       */
+      speed = 1;
+
+      // with kinect, the lane regen needs to be increased
+      // so platforms dont overlap
+      regen = 10000;
+    }
+    context.enableDepth();
+    context.enableHand();
+    context.startGesture(SimpleOpenNI.GESTURE_WAVE);
   } 
   else {
-    /*
-    * set this speed to 2 when kinect is connected for regular speed.
-     * set at 1 for now because 2 is a little difficult with kinect
-     */
     speed = 1;
-
-    // with kinect, the lane regen needs to be increased
-    // so platforms dont overlap
-    regen = 10000;
+    regen = 6000;
   }
-  context.enableDepth();
-  context.enableHand();
-  context.startGesture(SimpleOpenNI.GESTURE_WAVE);
 
   btnRestart = new Button("Restart Game", GAME_WIDTH/2 + 100, GAME_HEIGHT - 30, 100, 30);
   btnRestart.setBorderColor(0, 255, 0);
@@ -180,7 +197,9 @@ void setup() {
 
 void draw() {
   // update kinect cam
-  context.update();
+  if (!appletMode) {
+    context.update();
+  }
 
   background(GAME_BACKGROUND_COLOR);
   drawLanes();
@@ -192,8 +211,11 @@ void draw() {
   drawPlayerLives();
   processGameplay();
   drawRestartButton();
-  drawInputInfo();
-  drawTrackedHands();
+  
+  if (!appletMode) {
+    drawInputInfo();
+    drawTrackedHands();
+  }
 }
 
 void drawRestartButton() {
