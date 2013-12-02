@@ -596,7 +596,7 @@ private void processPlayer() {
     for (int i = 0; i < platforms.size(); i++) {
       // Checks if player lands on platform, if so he will sail on it.
       if (platforms.get(i).hasCollidedWith(player, 0)) {
-        player.sail(platforms.get(i));
+        player.sail(platforms.get(i), speed);
         currentPlatform = i;
       }
     }
