@@ -126,7 +126,7 @@ public static PApplet applet;
 boolean appletMode = false;
 
 // width of kinect input area
-public static final int KINECT_INPUT_AREA = 300;
+public static final int KINECT_INPUT_AREA_WIDTH = 300;
 
 // restart game button
 Button btnRestart;
@@ -138,7 +138,7 @@ void setup() {
     size(GAME_WIDTH, GAME_HEIGHT);
   } 
   else {
-    size(GAME_WIDTH+KINECT_INPUT_AREA, GAME_HEIGHT);
+    size(GAME_WIDTH+KINECT_INPUT_AREA_WIDTH, GAME_HEIGHT);
   }
 
   gameWon = false;
@@ -276,7 +276,7 @@ void drawInputInfo() {
   noStroke();
   fill(GAME_BACKGROUND_COLOR);
   rectMode(CORNER);
-  rect(GAME_WIDTH, 0, width-GAME_WIDTH, height);
+  rect(GAME_WIDTH, 0, KINECT_INPUT_AREA_WIDTH, height);
 }
 
 void drawTrackedHands() {
