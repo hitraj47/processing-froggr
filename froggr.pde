@@ -211,7 +211,7 @@ void draw() {
   drawPlayerLives();
   processGameplay();
   drawRestartButton();
-  
+
   if (!appletMode) {
     drawInputInfo();
     drawTrackedHands();
@@ -267,6 +267,7 @@ void restartGame() {
   // remove all moving sprites
   vehicles.clear();
   platforms.clear();
+  player = new Player(playerStartX, GAME_HEIGHT - (2 * LANE_HEIGHT), STARTING_LIVES);
 
   // reset time
   time = -regen;
@@ -305,10 +306,10 @@ void drawTrackedHands() {
         context.convertRealWorldToProjective(lastPoint, lastPoint2d);
         PVector origin2d = new PVector();
         context.convertRealWorldToProjective(origin, origin2d);
-        
+
         // allow some space for input
         float buffer = 40;
-        
+
         // time to wait for next kinect input
         long timeToWait = 500;
 
